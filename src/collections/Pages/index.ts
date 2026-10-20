@@ -117,7 +117,22 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
-    slugField(),
+    slugField({
+      overrides: (baseField) => {
+        const slugTextField = baseField.fields?.[1] as any
+        if (slugTextField) {
+          slugTextField.validate = (value: string | null | undefined) => {
+            if (!value) return true
+            const normalized = value.toLowerCase().trim()
+            if (normalized === 'admin' || normalized === 'api') {
+              return 'Slug cannot be "admin" or "api" as these are reserved system routes.'
+            }
+            return true
+          }
+        }
+        return baseField
+      },
+    }),
   ],
   hooks: {
     afterChange: [revalidatePage],

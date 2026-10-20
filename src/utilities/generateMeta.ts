@@ -26,9 +26,10 @@ export const generateMeta = async (args: {
 
   const ogImage = getImageURL(doc?.meta?.image)
 
+  const fallbackTitle = doc && 'title' in doc && doc.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
   const title = doc?.meta?.title
     ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+    : fallbackTitle
 
   return {
     description: doc?.meta?.description,
