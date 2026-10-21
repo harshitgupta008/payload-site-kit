@@ -245,6 +245,28 @@ export const SiteSettings: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'SEO Defaults',
+          fields: [
+            {
+              name: 'defaultDescription',
+              type: 'textarea',
+              label: 'Default Meta Description',
+              admin: {
+                description: 'Fallback search engine description used when a page does not specify its own.',
+              },
+            },
+            {
+              name: 'defaultOgImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Default OpenGraph / Social Image',
+              admin: {
+                description: 'Fallback social sharing image used across pages and posts.',
+              },
+            },
+          ],
+        },
       ],
     },
   ],

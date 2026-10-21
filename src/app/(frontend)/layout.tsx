@@ -23,11 +23,37 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { isEnabled } = await draftMode()
   const siteSettings = await getCachedGlobal('siteSettings', 1)()
   const theme = resolveTheme(siteSettings)
+  const serverUrl = getServerSideURL()
+  const siteName = siteSettings?.siteName || 'Payload Website'
 
   const faviconUrl =
     typeof siteSettings?.favicon === 'object' && siteSettings?.favicon?.url
       ? siteSettings.favicon.url
       : '/favicon.ico'
+
+  const logoUrl =
+    typeof siteSettings?.logo === 'object' && siteSettings?.logo?.url
+      ? (siteSettings.logo.url.startsWith('http')
+          ? siteSettings.logo.url
+          : `${serverUrl}${siteSettings.logo.url}`)
+      : undefined
+
+  const sameAs = Array.isArray(siteSettings?.socialLinks)
+    ? siteSettings.socialLinks
+        .map((item: any) => item?.url)
+        .filter((url: any) => typeof url === 'string' && url.trim().length > 0)
+    : []
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: siteName,
+    url: serverUrl,
+    ...(logoUrl ? { logo: logoUrl } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+  }
+
+  const safeJsonLd = JSON.stringify(organizationSchema).replace(/</g, '\\u003c')
 
   return (
     <html
@@ -39,6 +65,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <InitTheme />
         <link href={faviconUrl} rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLd,
+          }}
+        />
         <style
           id="theme-tokens"
           dangerouslySetInnerHTML={{
@@ -79,7 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getCachedGlobal('siteSettings', 1)()
-  const siteName = siteSettings?.siteName || 'Payload Website Template'
+  const siteName = siteSettings?.siteName || 'Payload Website'
 
   return {
     metadataBase: new URL(getServerSideURL()),

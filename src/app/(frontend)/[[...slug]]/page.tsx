@@ -91,6 +91,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
+  const { isEnabled: draft } = await draftMode()
   const { slug: rawSlug } = await paramsPromise
   const slug = rawSlug && rawSlug.length > 0 ? rawSlug.join('/') : 'home'
   const decodedSlug = decodeURIComponent(slug)
@@ -104,7 +105,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     page = homeStatic
   }
 
-  return generateMeta({ doc: page })
+  return generateMeta({ doc: page, isDraft: draft })
 }
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {

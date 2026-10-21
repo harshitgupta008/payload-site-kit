@@ -211,6 +211,10 @@ export interface Page {
      */
     image?: (string | null) | Media;
     description?: string | null;
+    /**
+     * When checked, this page will output a "noindex, nofollow" robots meta tag.
+     */
+    noIndex?: boolean | null;
   };
   publishedAt?: string | null;
   /**
@@ -1090,6 +1094,7 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         image?: T;
         description?: T;
+        noIndex?: T;
       };
   publishedAt?: T;
   generateSlug?: T;
@@ -1714,6 +1719,14 @@ export interface SiteSetting {
   bodyFont?: ('Inter' | 'Poppins' | 'Playfair Display' | 'Montserrat' | 'Roboto') | null;
   radius?: ('none' | 'small' | 'medium' | 'large' | 'full') | null;
   buttonStyle?: ('solid' | 'outline' | 'gradient') | null;
+  /**
+   * Fallback search engine description used when a page does not specify its own.
+   */
+  defaultDescription?: string | null;
+  /**
+   * Fallback social sharing image used across pages and posts.
+   */
+  defaultOgImage?: (string | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1791,6 +1804,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   bodyFont?: T;
   radius?: T;
   buttonStyle?: T;
+  defaultDescription?: T;
+  defaultOgImage?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

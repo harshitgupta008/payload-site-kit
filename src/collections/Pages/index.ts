@@ -106,6 +106,15 @@ export const Pages: CollectionConfig<'pages'> = {
               titlePath: 'meta.title',
               descriptionPath: 'meta.description',
             }),
+            {
+              name: 'noIndex',
+              type: 'checkbox',
+              label: 'Prevent Search Engines from Indexing (noindex)',
+              defaultValue: false,
+              admin: {
+                description: 'When checked, this page will output a "noindex, nofollow" robots meta tag.',
+              },
+            },
           ],
         },
       ],
