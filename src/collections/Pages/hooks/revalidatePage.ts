@@ -11,7 +11,8 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 }) => {
   if (!context.disableRevalidate) {
     if (doc._status === 'published') {
-      const path = doc.slug === 'home' ? '/' : `/${doc.slug}`
+      const isHome = doc.slug === 'home' || doc.slug === '/' || !doc.slug
+      const path = isHome ? '/' : `/${doc.slug.replace(/^\//, '')}`
 
       payload.logger.info(`Revalidating page at path: ${path}`)
 
@@ -25,7 +26,9 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 
     // If the page was previously published, we need to revalidate the old path
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
-      const oldPath = previousDoc.slug === 'home' ? '/' : `/${previousDoc.slug}`
+      const isOldHome =
+        previousDoc.slug === 'home' || previousDoc.slug === '/' || !previousDoc.slug
+      const oldPath = isOldHome ? '/' : `/${previousDoc.slug.replace(/^\//, '')}`
 
       payload.logger.info(`Revalidating old page at path: ${oldPath}`)
 
@@ -42,7 +45,8 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 
 export const revalidateDelete: CollectionAfterDeleteHook<Page> = ({ doc, req: { context } }) => {
   if (!context.disableRevalidate) {
-    const path = doc?.slug === 'home' ? '/' : `/${doc?.slug}`
+    const isHome = doc?.slug === 'home' || doc?.slug === '/' || !doc?.slug
+    const path = isHome ? '/' : `/${doc?.slug ? doc.slug.replace(/^\//, '') : ''}`
     try {
       revalidatePath(path)
       revalidateTag('pages-sitemap', 'max')

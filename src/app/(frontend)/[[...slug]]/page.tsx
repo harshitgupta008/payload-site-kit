@@ -32,10 +32,10 @@ export async function generateStaticParams() {
   const params =
     pages.docs
       ?.filter((doc) => {
-        return doc.slug && doc.slug !== 'home'
+        return doc.slug && doc.slug !== 'home' && doc.slug !== '/' && doc.slug.trim() !== ''
       })
       .map(({ slug }) => {
-        return { slug: slug.split('/') }
+        return { slug: slug.replace(/^\//, '').split('/') }
       }) || []
 
   return [{ slug: [] }, ...params]
@@ -58,14 +58,15 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const slug = rawSlug && rawSlug.length > 0 ? rawSlug.join('/') : 'home'
   const decodedSlug = decodeURIComponent(slug)
-  const url = decodedSlug === 'home' ? '/' : '/' + decodedSlug
+  const isHome = decodedSlug === 'home' || decodedSlug === '/' || decodedSlug === ''
+  const url = isHome ? '/' : '/' + decodedSlug
 
   let page: RequiredDataFromCollectionSlug<'pages'> | null = await queryPageBySlug({
     slug: decodedSlug,
   })
 
   // Template's fallback for a missing "home" page
-  if (!page && decodedSlug === 'home') {
+  if (!page && isHome) {
     page = homeStatic
   }
 
@@ -93,12 +94,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug: rawSlug } = await paramsPromise
   const slug = rawSlug && rawSlug.length > 0 ? rawSlug.join('/') : 'home'
   const decodedSlug = decodeURIComponent(slug)
+  const isHome = decodedSlug === 'home' || decodedSlug === '/' || decodedSlug === ''
 
   let page: RequiredDataFromCollectionSlug<'pages'> | null = await queryPageBySlug({
     slug: decodedSlug,
   })
 
-  if (!page && decodedSlug === 'home') {
+  if (!page && isHome) {
     page = homeStatic
   }
 
@@ -110,6 +112,8 @@ const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
 
   const payload = await getPayload({ config: configPromise })
 
+  const isHome = slug === 'home' || slug === '/' || slug === ''
+
   const result = await payload.find({
     collection: 'pages',
     depth: 2,
@@ -117,11 +121,31 @@ const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
     limit: 1,
     overrideAccess: draft,
     pagination: false,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
+    where: isHome
+      ? {
+          or: [
+            {
+              slug: {
+                equals: 'home',
+              },
+            },
+            {
+              slug: {
+                equals: '/',
+              },
+            },
+            {
+              slug: {
+                equals: '',
+              },
+            },
+          ],
+        }
+      : {
+          slug: {
+            equals: slug,
+          },
+        },
   })
 
   return result.docs?.[0] || null
