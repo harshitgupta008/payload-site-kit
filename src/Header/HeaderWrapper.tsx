@@ -22,7 +22,6 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   siteSettings,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [adminBarHeight, setAdminBarHeight] = useState(0)
 
   const layout = headerData?.layout
   const variant = layout?.variant || 'default'
@@ -52,27 +51,6 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // AdminBar offset detection
-  useEffect(() => {
-    const updateAdminBar = () => {
-      const adminBar = document.querySelector('.admin-bar') as HTMLElement | null
-      if (adminBar && adminBar.offsetHeight > 0 && window.getComputedStyle(adminBar).display !== 'none') {
-        setAdminBarHeight(adminBar.offsetHeight)
-      } else {
-        setAdminBarHeight(0)
-      }
-    }
-
-    updateAdminBar()
-    const observer = new MutationObserver(updateAdminBar)
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true })
-    window.addEventListener('resize', updateAdminBar)
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('resize', updateAdminBar)
-    }
   }, [])
 
   // Determine dynamic background and border styles
@@ -139,12 +117,9 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
       <AnnouncementBar announcement={announcementBar} />
 
       <header
-        style={{
-          top: isSticky ? `${adminBarHeight}px` : undefined,
-        }}
         className={cn(
           'w-full z-30 transition-all duration-200',
-          isSticky && 'sticky',
+          isSticky && 'sticky top-0',
           isCurrentlyTransparent && 'absolute left-0 right-0',
           headerBgClass,
         )}

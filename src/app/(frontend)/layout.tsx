@@ -5,13 +5,11 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
-import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import { resolveTheme } from '@/lib/theme/resolveTheme'
 import { allFontVariables } from '@/lib/theme/fonts'
@@ -20,7 +18,6 @@ import { getServerSideURL } from '@/utilities/getURL'
 import './globals.css'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
   const siteSettings = await getCachedGlobal('siteSettings', 1)()
   const theme = resolveTheme(siteSettings)
   const serverUrl = getServerSideURL()
@@ -95,12 +92,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
-
           <Header />
           {children}
           <Footer />
