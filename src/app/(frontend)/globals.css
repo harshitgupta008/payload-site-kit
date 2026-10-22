@@ -36,6 +36,12 @@
 @source inline("bg-success/30");
 @source inline("border-warning");
 @source inline("bg-warning/30");
+@source inline("bg-primary/15");
+@source inline("bg-background/80");
+@source inline("bg-foreground/60");
+@source inline("border-primary/40");
+@source inline("min-h-[75svh]");
+@source inline("min-h-[50svh]");
 
 @theme {
   --breakpoint-sm: 40rem;

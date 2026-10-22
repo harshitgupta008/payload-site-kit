@@ -70,6 +70,41 @@ export const ImageText: Block = {
       ],
     },
     {
+      type: 'row',
+      fields: [
+        {
+          name: 'imageDecoration',
+          type: 'select',
+          label: 'Image Decoration Frame',
+          defaultValue: 'none',
+          options: [
+            { label: 'None', value: 'none' },
+            { label: 'Offset Layered Shape (Brand Color)', value: 'offset-shape' },
+            { label: 'Offset Outline Frame', value: 'outline' },
+          ],
+          admin: {
+            width: '50%',
+            description: 'Stylized layer or frame behind the image.',
+          },
+        },
+        {
+          name: 'imageRadius',
+          type: 'select',
+          label: 'Image Corner Radius',
+          defaultValue: 'large',
+          options: [
+            { label: 'None (Square Corners)', value: 'none' },
+            { label: 'Small', value: 'small' },
+            { label: 'Large (Rounded)', value: 'large' },
+          ],
+          admin: {
+            width: '50%',
+            description: 'Border radius applied to the image.',
+          },
+        },
+      ],
+    },
+    {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
@@ -110,10 +145,32 @@ export const ImageText: Block = {
       ],
     },
     {
-      name: 'enableLink',
-      type: 'checkbox',
-      label: 'Add Action Button',
-      defaultValue: false,
+      type: 'row',
+      fields: [
+        {
+          name: 'enableLink',
+          type: 'checkbox',
+          label: 'Add Action Button',
+          defaultValue: false,
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'buttonStyle',
+          type: 'select',
+          label: 'Button Style',
+          defaultValue: 'default',
+          options: [
+            { label: 'Default Button', value: 'default' },
+            { label: 'Arrow Circle (Circular Icon Badge)', value: 'arrow-circle' },
+          ],
+          admin: {
+            width: '50%',
+            condition: (_, siblingData) => Boolean(siblingData?.enableLink),
+          },
+        },
+      ],
     },
     link({
       overrides: {

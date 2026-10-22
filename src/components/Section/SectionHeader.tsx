@@ -6,6 +6,7 @@ export interface SectionHeaderProps {
   description?: string | null
   alignment?: 'left' | 'center' | 'right' | null
   headingLevel?: 'h1' | 'h2' | 'h3'
+  accentColor?: 'primary' | 'secondary' | 'foreground' | null
   className?: string
 }
 
@@ -15,16 +16,24 @@ const alignmentClasses = {
   right: 'text-right ml-auto items-end',
 }
 
+const accentClasses: Record<string, string> = {
+  primary: 'text-primary',
+  secondary: 'text-secondary-foreground',
+  foreground: 'text-foreground',
+}
+
 export const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   description,
   alignment = 'center',
   headingLevel = 'h2',
+  accentColor,
   className,
 }) => {
   if (!title && !description) return null
 
   const alignClass = alignmentClasses[alignment || 'center'] || alignmentClasses.center
+  const accentClass = accentColor ? accentClasses[accentColor] || '' : ''
   const HeadingTag = headingLevel
 
   return (
@@ -33,6 +42,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         <HeadingTag
           className={cn(
             'font-heading tracking-tight leading-tight',
+            accentClass,
             headingLevel === 'h1'
               ? 'text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 md:mb-6'
               : 'text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4',

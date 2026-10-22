@@ -17,18 +17,39 @@ export const HeroBlock: Block = {
     }),
     sectionStyle(),
     {
-      name: 'variant',
-      type: 'select',
-      label: 'Hero Layout Variant',
-      defaultValue: 'centered',
-      options: [
-        { label: 'Centered (Heading & Buttons Centered, Image Below)', value: 'centered' },
-        { label: 'Split (Text Left, Image Right)', value: 'split-right' },
-        { label: 'Split (Image Left, Text Right)', value: 'split-left' },
+      type: 'row',
+      fields: [
+        {
+          name: 'variant',
+          type: 'select',
+          label: 'Hero Layout Variant',
+          defaultValue: 'centered',
+          options: [
+            { label: 'Centered (Heading & Buttons Centered, Image Below)', value: 'centered' },
+            { label: 'Split (Text Left, Image Right)', value: 'split-right' },
+            { label: 'Split (Image Left, Text Right)', value: 'split-left' },
+          ],
+          admin: {
+            width: '50%',
+            description: 'Choose layout arrangement for the hero section.',
+          },
+        },
+        {
+          name: 'textAlign',
+          type: 'select',
+          label: 'Text Alignment',
+          defaultValue: 'center',
+          options: [
+            { label: 'Left Aligned', value: 'left' },
+            { label: 'Centered', value: 'center' },
+            { label: 'Right Aligned', value: 'right' },
+          ],
+          admin: {
+            width: '50%',
+            description: 'Alignment of hero heading, subtitle, and buttons.',
+          },
+        },
       ],
-      admin: {
-        description: 'Choose layout arrangement for the hero section.',
-      },
     },
     {
       name: 'image',

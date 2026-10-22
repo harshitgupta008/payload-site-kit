@@ -59,6 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       className={cn(GeistSans.variable, GeistMono.variable, allFontVariables)}
       lang="en"
+      data-theme="light"
       suppressHydrationWarning
     >
       <head>

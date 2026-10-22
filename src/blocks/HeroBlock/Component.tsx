@@ -4,6 +4,7 @@ import { cn } from '@/utilities/ui'
 import { SectionWrapper } from '@/components/Section/SectionWrapper'
 import { CMSLink } from '@/components/Link'
 import type { Media } from '@/payload-types'
+import type { SectionStyleType } from '@/fields/sectionStyle'
 
 export interface HeroBlockComponentProps {
   sectionHeader?: {
@@ -11,11 +12,24 @@ export interface HeroBlockComponentProps {
     description?: string | null
     alignment?: 'left' | 'center' | 'right' | null
   } | null
-  sectionStyle?: any
+  sectionStyle?: SectionStyleType | null
   variant?: 'centered' | 'split-left' | 'split-right' | null
+  textAlign?: 'left' | 'center' | 'right' | null
   image?: string | Media | null
   links?: { link: any; id?: string | null }[] | null
   hasOldHero?: boolean
+}
+
+const textAlignContainerClasses: Record<string, string> = {
+  left: 'text-left items-start mr-auto',
+  center: 'text-center items-center mx-auto',
+  right: 'text-right items-end ml-auto',
+}
+
+const buttonAlignClasses: Record<string, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
 }
 
 export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => {
@@ -23,6 +37,7 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
     sectionHeader,
     sectionStyle,
     variant = 'centered',
+    textAlign = 'center',
     image,
     links,
     hasOldHero = false,
@@ -33,8 +48,6 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
   const imageAlt = mediaObj?.alt || 'Hero Image'
 
   // Per specification: A page must never have two h1 tags.
-  // If the page already has a published old hero (High/Medium/Low Impact), use h2.
-  // Otherwise, this Hero block serves as the main primary header and renders as h1.
   const HeadingTag = hasOldHero ? 'h2' : 'h1'
 
   const title = sectionHeader?.title
@@ -44,10 +57,15 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
   const isSplitRight = variant === 'split-right'
   const isCentered = !isSplitLeft && !isSplitRight
 
+  const activeAlign = textAlign || 'center'
+  const alignContainerClass =
+    textAlignContainerClasses[activeAlign] || textAlignContainerClasses.center
+  const btnAlignClass = buttonAlignClasses[activeAlign] || buttonAlignClasses.center
+
   return (
-    <SectionWrapper sectionStyle={sectionStyle} className="pt-6 pb-16 md:py-20 lg:py-24">
+    <SectionWrapper sectionStyle={sectionStyle} className="py-12 md:py-20 lg:py-24">
       {isCentered ? (
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+        <div className={cn('flex flex-col max-w-4xl w-full', alignContainerClass)}>
           {title && (
             <HeadingTag className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold font-heading tracking-tight leading-[1.1] mb-6">
               {title}
@@ -61,7 +79,7 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
           )}
 
           {Array.isArray(links) && links.length > 0 && (
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+            <div className={cn('flex flex-wrap items-center gap-4 mb-12 w-full', btnAlignClass)}>
               {links.map((item, idx) => (
                 <CMSLink key={item.id || idx} {...item.link} size="lg" />
               ))}
@@ -84,12 +102,17 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
       ) : (
         <div
           className={cn(
-            'flex flex-col lg:flex-row items-center gap-10 md:gap-14 lg:gap-16',
+            'flex flex-col lg:flex-row items-center gap-10 md:gap-14 lg:gap-16 w-full',
             isSplitLeft ? 'lg:flex-row-reverse' : '',
           )}
         >
           {/* Text Column */}
-          <div className="w-full lg:w-1/2 flex-1 flex flex-col justify-center">
+          <div
+            className={cn(
+              'w-full lg:w-1/2 flex-1 flex flex-col justify-center',
+              alignContainerClass,
+            )}
+          >
             {title && (
               <HeadingTag className="text-4xl sm:text-5xl md:text-6xl font-extrabold font-heading tracking-tight leading-[1.15] mb-6">
                 {title}
@@ -103,7 +126,7 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
             )}
 
             {Array.isArray(links) && links.length > 0 && (
-              <div className="flex flex-wrap items-center gap-4">
+              <div className={cn('flex flex-wrap items-center gap-4', btnAlignClass)}>
                 {links.map((item, idx) => (
                   <CMSLink key={item.id || idx} {...item.link} size="lg" />
                 ))}

@@ -532,11 +532,11 @@ export interface ContentBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -544,9 +544,33 @@ export interface ContentBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   columns?:
     | {
@@ -855,11 +879,11 @@ export interface ImageTextBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -867,9 +891,33 @@ export interface ImageTextBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   /**
    * Side where the image appears on desktop screens.
@@ -883,6 +931,14 @@ export interface ImageTextBlock {
    * Align content vertically relative to the image.
    */
   verticalAlign?: ('center' | 'top') | null;
+  /**
+   * Stylized layer or frame behind the image.
+   */
+  imageDecoration?: ('none' | 'offset-shape' | 'outline') | null;
+  /**
+   * Border radius applied to the image.
+   */
+  imageRadius?: ('none' | 'small' | 'large') | null;
   /**
    * Image displayed alongside the text content.
    */
@@ -912,6 +968,7 @@ export interface ImageTextBlock {
       }[]
     | null;
   enableLink?: boolean | null;
+  buttonStyle?: ('default' | 'arrow-circle') | null;
   link?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
@@ -958,11 +1015,11 @@ export interface HeroBlockProps {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -970,14 +1027,42 @@ export interface HeroBlockProps {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   /**
    * Choose layout arrangement for the hero section.
    */
   variant?: ('centered' | 'split-right' | 'split-left') | null;
+  /**
+   * Alignment of hero heading, subtitle, and buttons.
+   */
+  textAlign?: ('left' | 'center' | 'right') | null;
   /**
    * Displayed as banner or beside text with priority loading.
    */
@@ -1036,11 +1121,11 @@ export interface ServicesGridBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -1048,23 +1133,76 @@ export interface ServicesGridBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   /**
-   * Number of service cards displayed per row on desktop.
+   * Equal distributes evenly; Custom lets each card specify 1/3, 1/2, 2/3, full.
    */
-  columns?: ('2' | '3' | '4') | null;
+  layoutMode?: ('equal' | 'custom') | null;
+  /**
+   * Number of equal cards per row on desktop.
+   */
+  columns?: ('1' | '2' | '3' | '4') | null;
+  /**
+   * Prepend sequential numbers to card titles using section accent color.
+   */
+  numbered?: boolean | null;
+  cardStyle?: ('shadow' | 'border' | 'flat') | null;
+  hover?: ('lift' | 'none') | null;
+  textAlign?: ('left' | 'center') | null;
   cards?:
     | {
         /**
-         * Recommended SVG or square PNG icon.
+         * Featured visual for this card.
+         */
+        image?: (string | null) | Media;
+        imagePosition?: ('top' | 'left' | 'none') | null;
+        imageRatio?: ('16:9' | '4:3' | '1:1') | null;
+        /**
+         * Rendered if no featured card image is uploaded.
          */
         icon?: (string | null) | Media;
+        /**
+         * Optional small label, pill, or category above title.
+         */
+        badge?: string | null;
+        /**
+         * Used when layoutMode is set to Custom.
+         */
+        width?: ('1/3' | '1/2' | '2/3' | 'full') | null;
         title: string;
-        description: string;
+        description?: string | null;
         enableLink?: boolean | null;
+        /**
+         * Optional label displayed at bottom of card (e.g. "Read more").
+         */
+        linkLabel?: string | null;
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -1114,11 +1252,11 @@ export interface FAQBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -1126,10 +1264,48 @@ export interface FAQBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
+  /**
+   * Arrangement of questions and optional side visual.
+   */
+  layout?: ('one-column' | 'two-columns' | 'image-left' | 'image-right') | null;
+  /**
+   * Item boundary appearance.
+   */
+  style?: ('line' | 'card' | 'plain') | null;
+  /**
+   * Displayed alongside FAQ in side image layouts.
+   */
+  sideImage?: (string | null) | Media;
+  allowMultipleOpen?: boolean | null;
+  firstOpen?: boolean | null;
   items: {
     question: string;
     answer: {
@@ -1176,11 +1352,11 @@ export interface TestimonialsBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -1188,9 +1364,33 @@ export interface TestimonialsBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   /**
    * Choose between a multi-card grid or a single prominent featured testimonial.
@@ -1230,11 +1430,11 @@ export interface PricingBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -1242,9 +1442,33 @@ export interface PricingBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   plans: {
     highlighted?: boolean | null;
@@ -1308,11 +1532,11 @@ export interface GalleryBlock {
     description?: string | null;
   };
   /**
-   * Controls background color, vertical padding, and entry animation.
+   * Controls background color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
-     * Applies theme token background colors respecting light/dark mode.
+     * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
     /**
@@ -1320,9 +1544,33 @@ export interface GalleryBlock {
      */
     spacing?: ('small' | 'medium' | 'large') | null;
     /**
-     * Entrance animation when scrolling into viewport.
+     * Entrance animation on scroll.
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
   };
   /**
    * Number of images displayed per row on desktop screens.
@@ -1710,6 +1958,12 @@ export interface ContentBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   columns?:
     | T
@@ -1785,10 +2039,18 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   imagePosition?: T;
   mobileOrder?: T;
   verticalAlign?: T;
+  imageDecoration?: T;
+  imageRadius?: T;
   image?: T;
   content?: T;
   bulletPoints?:
@@ -1798,6 +2060,7 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
         id?: T;
       };
   enableLink?: T;
+  buttonStyle?: T;
   link?:
     | T
     | {
@@ -1829,8 +2092,15 @@ export interface HeroBlockPropsSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   variant?: T;
+  textAlign?: T;
   image?: T;
   links?:
     | T
@@ -1868,15 +2138,32 @@ export interface ServicesGridBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
+  layoutMode?: T;
   columns?: T;
+  numbered?: T;
+  cardStyle?: T;
+  hover?: T;
+  textAlign?: T;
   cards?:
     | T
     | {
+        image?: T;
+        imagePosition?: T;
+        imageRatio?: T;
         icon?: T;
+        badge?: T;
+        width?: T;
         title?: T;
         description?: T;
         enableLink?: T;
+        linkLabel?: T;
         link?:
           | T
           | {
@@ -1910,7 +2197,18 @@ export interface FAQBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
+  layout?: T;
+  style?: T;
+  sideImage?: T;
+  allowMultipleOpen?: T;
+  firstOpen?: T;
   items?:
     | T
     | {
@@ -1939,6 +2237,12 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   layout?: T;
   items?:
@@ -1971,6 +2275,12 @@ export interface PricingBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   plans?:
     | T
@@ -2020,6 +2330,12 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         background?: T;
         spacing?: T;
         animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
       };
   columns?: T;
   images?:
