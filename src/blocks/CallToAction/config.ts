@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '../../fields/linkGroup'
+import { actionField } from '../../fields/action'
 
 export const CallToAction: Block = {
   slug: 'cta',
@@ -28,10 +29,25 @@ export const CallToAction: Block = {
       }),
       label: false,
     },
+    {
+      name: 'actions',
+      type: 'array',
+      label: 'Action Buttons',
+      maxRows: 2,
+      admin: {
+        description: 'Action buttons (links, popup forms in modals, phone calls, downloads).',
+      },
+      fields: [
+        actionField({ disableLabel: false, includeStyle: true }),
+      ],
+    },
     linkGroup({
       appearances: ['default', 'outline'],
       overrides: {
         maxRows: 2,
+        admin: {
+          description: 'Legacy link buttons (fallback).',
+        },
       },
     }),
   ],

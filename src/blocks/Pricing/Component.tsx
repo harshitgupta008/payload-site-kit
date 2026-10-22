@@ -2,7 +2,7 @@ import React from 'react'
 import { cn } from '@/utilities/ui'
 import { SectionWrapper } from '@/components/Section/SectionWrapper'
 import { SectionHeader } from '@/components/Section/SectionHeader'
-import { CMSLink } from '@/components/Link'
+import { ActionButton } from '@/components/ActionButton'
 import { Check } from 'lucide-react'
 
 export interface PricingBlockProps {
@@ -94,9 +94,11 @@ export const PricingBlock: React.FC<PricingBlockProps> = (props) => {
 
                 {plan.link && (
                   <div className="pt-2">
-                    <CMSLink
-                      {...plan.link}
+                    <ActionButton
+                      link={plan.link}
+                      label={plan.link.label || 'Get Started'}
                       appearance={isFeatured ? 'default' : 'outline'}
+                      style={isFeatured ? 'solid' : 'outline'}
                       size="lg"
                       className="w-full justify-center"
                     />

@@ -209,7 +209,7 @@ export interface Page {
         | ContentBlock
         | MediaBlock
         | ArchiveBlock
-        | FormBlock
+        | FormBlockProps
         | ImageTextBlock
         | HeroBlockProps
         | ServicesGridBlock
@@ -217,6 +217,7 @@ export interface Page {
         | TestimonialsBlock
         | PricingBlock
         | GalleryBlock
+        | CTAFormBlockProps
       )[]
     | null;
   meta?: {
@@ -481,6 +482,68 @@ export interface CallToActionBlock {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Action buttons (links, popup forms in modals, phone calls, downloads).
+   */
+  actions?:
+    | {
+        actionData?: {
+          /**
+           * Choose the action triggered when this button is clicked.
+           */
+          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+          label?: string | null;
+          style?: ('solid' | 'outline' | 'ghost') | null;
+          showArrow?: boolean | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          /**
+           * Select the form that appears in the popup modal when clicked.
+           */
+          form?: (string | null) | Form;
+          /**
+           * Rich content displayed inside the modal dialog.
+           */
+          popupContent?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          phone?: string | null;
+          whatsappMessage?: string | null;
+          /**
+           * Upload or choose the file to download.
+           */
+          file?: (string | null) | Media;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Legacy link buttons (fallback).
+   */
   links?:
     | {
         link: {
@@ -508,6 +571,198 @@ export interface CallToActionBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: string;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            placeholder?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'phone';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    url: string;
+  };
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -667,10 +922,79 @@ export interface ArchiveBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock".
+ * via the `definition` "FormBlockProps".
  */
-export interface FormBlock {
+export interface FormBlockProps {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Main title shown above the contact form section.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Introductory statement or instructions.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, height, container width, overlays, and animations.
+   */
+  sectionStyle?: {
+    /**
+     * Theme token background colors.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation on scroll.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
+  };
+  /**
+   * Select the form definition to display.
+   */
   form: string | Form;
+  fieldLayout?: ('two-column' | 'stacked') | null;
+  contactInfo?: {
+    enableContactInfo?: boolean | null;
+    contactInfoPosition?: ('left' | 'right') | null;
+    address?: string | null;
+    phone?: string | null;
+    email?: string | null;
+  };
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -690,171 +1014,6 @@ export interface FormBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms".
- */
-export interface Form {
-  id: string;
-  title: string;
-  fields?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
-          }
-        | {
-            message?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-      )[]
-    | null;
-  submitButtonLabel?: string | null;
-  confirmationType?: ('message' | 'redirect') | null;
-  confirmationMessage?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  redirect?: {
-    url: string;
-  };
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1200,9 +1359,60 @@ export interface ServicesGridBlock {
         description?: string | null;
         enableLink?: boolean | null;
         /**
-         * Optional label displayed at bottom of card (e.g. "Read more").
+         * Label displayed on the card action button (e.g. "Read more", "Book Now").
          */
         linkLabel?: string | null;
+        actionData?: {
+          /**
+           * Choose the action triggered when this button is clicked.
+           */
+          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          /**
+           * Select the form that appears in the popup modal when clicked.
+           */
+          form?: (string | null) | Form;
+          /**
+           * Rich content displayed inside the modal dialog.
+           */
+          popupContent?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          phone?: string | null;
+          whatsappMessage?: string | null;
+          /**
+           * Upload or choose the file to download.
+           */
+          file?: (string | null) | Media;
+        };
+        /**
+         * Legacy link field (fallback).
+         */
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -1587,6 +1797,83 @@ export interface GalleryBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTAFormBlockProps".
+ */
+export interface CTAFormBlockProps {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Headline motivating visitors to take action.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Value proposition or incentive to complete the form.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, height, container width, overlays, and animations.
+   */
+  sectionStyle?: {
+    /**
+     * Theme token background colors.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation on scroll.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+    /**
+     * Viewport height constraints for the section.
+     */
+    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    /**
+     * Applies when height is taller than content.
+     */
+    contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Horizontal content width boundary.
+     */
+    width?: ('contained' | 'wide' | 'full') | null;
+    /**
+     * Applied to titles, card numbers, badges, and highlights.
+     */
+    accentColor?: ('primary' | 'secondary' | 'foreground') | null;
+    /**
+     * Optional image layer covering the entire section.
+     */
+    backgroundImage?: (string | null) | Media;
+    /**
+     * Token-based overlay tint over background image.
+     */
+    overlay?: ('none' | 'light' | 'dark') | null;
+  };
+  /**
+   * Select the form (newsletter, quote request, consultation, etc.).
+   */
+  form: string | Form;
+  layout?: ('text-left-form-right' | 'form-left-text-right' | 'centered') | null;
+  /**
+   * Optional image displayed beside the text column.
+   */
+  image?: (string | null) | Media;
+  note?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1625,6 +1912,7 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  sourcePage?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1892,7 +2180,7 @@ export interface PagesSelect<T extends boolean = true> {
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
-        formBlock?: T | FormBlockSelect<T>;
+        formBlock?: T | FormBlockPropsSelect<T>;
         imageText?: T | ImageTextBlockSelect<T>;
         heroBlock?: T | HeroBlockPropsSelect<T>;
         servicesGrid?: T | ServicesGridBlockSelect<T>;
@@ -1900,6 +2188,7 @@ export interface PagesSelect<T extends boolean = true> {
         testimonials?: T | TestimonialsBlockSelect<T>;
         pricing?: T | PricingBlockSelect<T>;
         gallery?: T | GalleryBlockSelect<T>;
+        ctaForm?: T | CTAFormBlockPropsSelect<T>;
       };
   meta?:
     | T
@@ -1922,6 +2211,32 @@ export interface PagesSelect<T extends boolean = true> {
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
   richText?: T;
+  actions?:
+    | T
+    | {
+        actionData?:
+          | T
+          | {
+              action?: T;
+              label?: T;
+              style?: T;
+              showArrow?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              form?: T;
+              popupContent?: T;
+              phone?: T;
+              whatsappMessage?: T;
+              file?: T;
+            };
+        id?: T;
+      };
   links?:
     | T
     | {
@@ -2012,10 +2327,40 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock_select".
+ * via the `definition` "FormBlockProps_select".
  */
-export interface FormBlockSelect<T extends boolean = true> {
+export interface FormBlockPropsSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
+      };
   form?: T;
+  fieldLayout?: T;
+  contactInfo?:
+    | T
+    | {
+        enableContactInfo?: T;
+        contactInfoPosition?: T;
+        address?: T;
+        phone?: T;
+        email?: T;
+      };
   enableIntro?: T;
   introContent?: T;
   id?: T;
@@ -2164,6 +2509,24 @@ export interface ServicesGridBlockSelect<T extends boolean = true> {
         description?: T;
         enableLink?: T;
         linkLabel?: T;
+        actionData?:
+          | T
+          | {
+              action?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              form?: T;
+              popupContent?: T;
+              phone?: T;
+              whatsappMessage?: T;
+              file?: T;
+            };
         link?:
           | T
           | {
@@ -2345,6 +2708,38 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         caption?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTAFormBlockProps_select".
+ */
+export interface CTAFormBlockPropsSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+        height?: T;
+        contentVerticalAlign?: T;
+        width?: T;
+        accentColor?: T;
+        backgroundImage?: T;
+        overlay?: T;
+      };
+  form?: T;
+  layout?: T;
+  image?: T;
+  note?: T;
   id?: T;
   blockName?: T;
 }
@@ -2642,6 +3037,35 @@ export interface FormsSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        phone?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              placeholder?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   submitButtonLabel?: T;
   confirmationType?: T;
@@ -2679,6 +3103,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  sourcePage?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2863,10 +3288,15 @@ export interface Header {
   };
   cta?: {
     enableCTA?: boolean | null;
-    action?: ('link' | 'popupForm') | null;
+    action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp') | null;
     style?: ('solid' | 'outline') | null;
     label?: string | null;
     showArrow?: boolean | null;
+    /**
+     * Select the form that opens in the modal dialog when clicked.
+     */
+    form?: (string | null) | Form;
+    phone?: string | null;
     link?: {
       type?: ('reference' | 'custom') | null;
       newTab?: boolean | null;
@@ -3102,6 +3532,8 @@ export interface HeaderSelect<T extends boolean = true> {
         style?: T;
         label?: T;
         showArrow?: T;
+        form?: T;
+        phone?: T;
         link?:
           | T
           | {

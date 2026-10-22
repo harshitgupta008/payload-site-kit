@@ -10,6 +10,7 @@ import { MobileMenu } from './MobileMenu'
 import { AnnouncementBar } from './AnnouncementBar'
 import { Container } from '@/components/Container'
 import { CMSLink } from '@/components/Link'
+import { ActionButton } from '@/components/ActionButton'
 import type { Header as HeaderType } from '@/payload-types'
 
 export interface HeaderWrapperProps {
@@ -75,40 +76,21 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   const isCentered = variant === 'centered'
   const isSplit = variant === 'split'
 
-  // Render CTA helper
+  // Render CTA helper using unified ActionButton
   const renderCTA = (size: 'sm' | 'lg' = 'sm') => {
     if (!cta?.enableCTA) return null
 
-    if (cta.action === 'popupForm') {
-      return (
-        <button
-          type="button"
-          data-popup-action="true"
-          aria-haspopup="dialog"
-          className={cn(
-            'font-semibold shadow-sm inline-flex items-center gap-2 rounded-[var(--radius)] text-sm transition-colors',
-            size === 'sm' ? 'px-4 py-2' : 'px-5 py-2.5',
-            cta.style === 'outline'
-              ? 'border border-primary text-primary hover:bg-primary/10'
-              : 'bg-primary text-primary-foreground hover:bg-primary/90',
-          )}
-        >
-          <span>{cta.label || 'Contact Us'}</span>
-          {cta.showArrow && <ArrowRight className="w-3.5 h-3.5" />}
-        </button>
-      )
-    }
-
     return (
-      <CMSLink
-        {...cta.link}
-        size={size}
-        appearance={cta.style === 'outline' ? 'outline' : 'default'}
-        className="font-semibold shadow-sm inline-flex items-center gap-2"
-      >
-        <span>{cta.label || 'Get Started'}</span>
-        {cta.showArrow && <ArrowRight className="w-3.5 h-3.5" />}
-      </CMSLink>
+      <ActionButton
+        action={cta.action || 'link'}
+        link={cta.link}
+        form={cta.form}
+        phone={cta.phone}
+        label={cta.label || 'Contact Us'}
+        style={cta.style === 'outline' ? 'outline' : 'solid'}
+        size={size === 'lg' ? 'lg' : 'sm'}
+        showArrow={Boolean(cta.showArrow)}
+      />
     )
   }
 

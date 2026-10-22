@@ -1,5 +1,6 @@
 import type { Field } from 'payload'
 import { link } from '@/fields/link'
+import { actionField } from '@/fields/action'
 
 export const cardFields = (options?: { includeWidth?: boolean }): Field[] => {
   const { includeWidth = true } = options || {}
@@ -111,7 +112,7 @@ export const cardFields = (options?: { includeWidth?: boolean }): Field[] => {
         {
           name: 'enableLink',
           type: 'checkbox',
-          label: 'Enable Link (Makes Entire Card Clickable)',
+          label: 'Enable Action / Link Button',
           defaultValue: false,
           admin: {
             width: '40%',
@@ -120,19 +121,31 @@ export const cardFields = (options?: { includeWidth?: boolean }): Field[] => {
         {
           name: 'linkLabel',
           type: 'text',
-          label: 'Link Text / CTA Label',
+          label: 'Button Label',
           admin: {
             width: '60%',
-            description: 'Optional label displayed at bottom of card (e.g. "Read more").',
+            description: 'Label displayed on the card action button (e.g. "Read more", "Book Now").',
             condition: (_, siblingData) => Boolean(siblingData?.enableLink),
           },
         },
       ],
     },
-    link({
+    actionField({
+      name: 'actionData',
+      disableLabel: true,
       overrides: {
         admin: {
           condition: (_, siblingData) => Boolean(siblingData?.enableLink),
+        },
+      },
+    }),
+    link({
+      overrides: {
+        admin: {
+          condition: (_, siblingData) =>
+            Boolean(siblingData?.enableLink) &&
+            (!siblingData?.actionData?.action || siblingData?.actionData?.action === 'link'),
+          description: 'Legacy link field (fallback).',
         },
       },
     }),

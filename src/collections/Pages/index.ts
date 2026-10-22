@@ -14,6 +14,7 @@ import { FAQ } from '../../blocks/FAQ/config'
 import { Testimonials } from '../../blocks/Testimonials/config'
 import { Pricing } from '../../blocks/Pricing/config'
 import { Gallery } from '../../blocks/Gallery/config'
+import { CTAForm } from '../../blocks/CTAForm/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -92,6 +93,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Testimonials,
                 Pricing,
                 Gallery,
+                CTAForm,
               ],
               required: false,
               admin: {

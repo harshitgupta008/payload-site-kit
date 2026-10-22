@@ -14,6 +14,7 @@ import { FAQBlock } from '@/blocks/FAQ/Component'
 import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
 import { PricingBlock } from '@/blocks/Pricing/Component'
 import { GalleryBlock } from '@/blocks/Gallery/Component'
+import { CTAFormBlock } from '@/blocks/CTAForm/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -28,6 +29,7 @@ const blockComponents = {
   testimonials: TestimonialsBlock,
   pricing: PricingBlock,
   gallery: GalleryBlock,
+  ctaForm: CTAFormBlock,
 }
 
 export const RenderBlocks: React.FC<{

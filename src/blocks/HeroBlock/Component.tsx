@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { cn } from '@/utilities/ui'
 import { SectionWrapper } from '@/components/Section/SectionWrapper'
 import { CMSLink } from '@/components/Link'
+import { ActionButton } from '@/components/ActionButton'
 import type { Media } from '@/payload-types'
 import type { SectionStyleType } from '@/fields/sectionStyle'
 
@@ -80,9 +81,27 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
 
           {Array.isArray(links) && links.length > 0 && (
             <div className={cn('flex flex-wrap items-center gap-4 mb-12 w-full', btnAlignClass)}>
-              {links.map((item, idx) => (
-                <CMSLink key={item.id || idx} {...item.link} size="lg" />
-              ))}
+              {links.map((item: any, idx) => {
+                const actionData = item.actionData || item
+                return (
+                  <ActionButton
+                    key={item.id || idx}
+                    size="lg"
+                    actionData={actionData}
+                    action={actionData?.action || item.action}
+                    form={actionData?.form || item.form}
+                    popupContent={actionData?.popupContent || item.popupContent}
+                    phone={actionData?.phone || item.phone}
+                    whatsappMessage={actionData?.whatsappMessage || item.whatsappMessage}
+                    file={actionData?.file || item.file}
+                    link={actionData?.link || item.link}
+                    label={actionData?.label || item.label || item.link?.label || 'Learn More'}
+                    appearance={item.link?.appearance}
+                    style={actionData?.style || (item.link?.appearance === 'outline' ? 'outline' : 'solid')}
+                    showArrow={Boolean(actionData?.showArrow)}
+                  />
+                )
+              })}
             </div>
           )}
 
@@ -127,9 +146,27 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = (props) => 
 
             {Array.isArray(links) && links.length > 0 && (
               <div className={cn('flex flex-wrap items-center gap-4', btnAlignClass)}>
-                {links.map((item, idx) => (
-                  <CMSLink key={item.id || idx} {...item.link} size="lg" />
-                ))}
+                {links.map((item: any, idx) => {
+                  const actionData = item.actionData || item
+                  return (
+                    <ActionButton
+                      key={item.id || idx}
+                      size="lg"
+                      actionData={actionData}
+                      action={actionData?.action || item.action}
+                      form={actionData?.form || item.form}
+                      popupContent={actionData?.popupContent || item.popupContent}
+                      phone={actionData?.phone || item.phone}
+                      whatsappMessage={actionData?.whatsappMessage || item.whatsappMessage}
+                      file={actionData?.file || item.file}
+                      link={actionData?.link || item.link}
+                      label={actionData?.label || item.label || item.link?.label || 'Learn More'}
+                      appearance={item.link?.appearance}
+                      style={actionData?.style || (item.link?.appearance === 'outline' ? 'outline' : 'solid')}
+                      showArrow={Boolean(actionData?.showArrow)}
+                    />
+                  )
+                })}
               </div>
             )}
           </div>

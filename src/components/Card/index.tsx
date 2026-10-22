@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
+import { ActionButton } from '@/components/ActionButton'
 import { Media } from '@/components/Media'
 import { ArrowRight } from 'lucide-react'
 import type { Post, Media as MediaType } from '@/payload-types'
@@ -22,6 +23,13 @@ export interface CardItemProps {
   link?: any
   linkLabel?: string | null
   width?: '1/3' | '1/2' | '2/3' | 'full' | null
+  actionData?: any
+  action?: any
+  form?: any
+  popupContent?: any
+  phone?: string | null
+  whatsappMessage?: string | null
+  file?: any
 }
 
 export interface CardProps {
@@ -168,7 +176,19 @@ export const Card: React.FC<CardProps> = (props) => {
   const ratioClass = imageRatioClasses[imageRatio || '16:9'] || imageRatioClasses['16:9']
   const accentText = accentTextClasses[accentColor || 'primary'] || accentTextClasses.primary
 
-  const hasLink = Boolean(enableLink && link)
+  const actionData = card.actionData || {}
+  const actionType = card.action || actionData.action || 'link'
+  const isInteractiveAction =
+    actionType === 'popupForm' ||
+    actionType === 'popupContent' ||
+    actionType === 'tel' ||
+    actionType === 'whatsapp' ||
+    actionType === 'download'
+
+  const hasActionOrLink = Boolean(
+    enableLink && (link || actionData.link || isInteractiveAction),
+  )
+  const isStretchedLink = hasActionOrLink && !isInteractiveAction && Boolean(actionData.link || link)
 
   const imageMedia = typeof image === 'object' && image !== null ? (image as MediaType) : null
   const imageUrl = imageMedia?.url || (typeof image === 'string' ? image : null)
@@ -193,9 +213,9 @@ export const Card: React.FC<CardProps> = (props) => {
       )}
     >
       {/* Stretched Link covering the entire card without nested anchors */}
-      {hasLink && (
+      {isStretchedLink && (
         <CMSLink
-          {...link}
+          {...(actionData.link || link)}
           className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-[var(--radius)]"
           aria-label={linkLabel || title}
         >
@@ -257,10 +277,22 @@ export const Card: React.FC<CardProps> = (props) => {
           </p>
         )}
 
-        {hasLink && (
-          <div className="mt-auto pt-2 flex items-center gap-1.5 font-semibold text-primary group-hover:underline underline-offset-4">
-            <span>{linkLabel || 'Read more'}</span>
-            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+        {hasActionOrLink && (
+          <div className="mt-auto pt-4 relative z-20">
+            <ActionButton
+              actionData={actionData}
+              action={actionType}
+              link={actionData.link || link}
+              form={card.form || actionData.form}
+              popupContent={card.popupContent || actionData.popupContent}
+              phone={card.phone || actionData.phone}
+              whatsappMessage={card.whatsappMessage || actionData.whatsappMessage}
+              file={card.file || actionData.file}
+              label={linkLabel || 'Read more'}
+              style="ghost"
+              icon="arrow-right"
+              className="p-0 h-auto font-semibold text-primary hover:text-primary/80 hover:bg-transparent justify-start"
+            />
           </div>
         )}
       </div>

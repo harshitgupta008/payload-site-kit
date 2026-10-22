@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
+import { ActionButton } from '@/components/ActionButton'
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 
 export interface MobileMenuProps {
@@ -162,34 +163,18 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             {/* Mobile CTA Button */}
             {cta?.enableCTA && (
               <div className="mt-8 pt-4">
-                {cta.action === 'popupForm' ? (
-                  <button
-                    type="button"
-                    data-popup-action="true"
-                    aria-haspopup="dialog"
-                    onClick={() => setIsOpen(false)}
-                    className={cn(
-                      'w-full min-h-[44px] flex items-center justify-center gap-2 font-bold text-center rounded-[var(--radius)] px-4 py-2 text-base transition-colors shadow-sm',
-                      cta.style === 'outline'
-                        ? 'border border-primary text-primary hover:bg-primary/10'
-                        : 'bg-primary text-primary-foreground hover:bg-primary/90',
-                    )}
-                  >
-                    <span>{cta.label || 'Contact Us'}</span>
-                    {cta.showArrow && <ArrowRight className="w-4 h-4" />}
-                  </button>
-                ) : (
-                  <CMSLink
-                    {...cta.link}
-                    size="lg"
-                    appearance={cta.style === 'outline' ? 'outline' : 'default'}
-                    onClick={() => setIsOpen(false)}
-                    className="w-full min-h-[44px] flex items-center justify-center gap-2 font-bold text-center shadow-sm"
-                  >
-                    <span>{cta.label || 'Get Started'}</span>
-                    {cta.showArrow && <ArrowRight className="w-4 h-4" />}
-                  </CMSLink>
-                )}
+                <ActionButton
+                  action={cta.action || 'link'}
+                  link={cta.link}
+                  form={cta.form}
+                  phone={cta.phone}
+                  label={cta.label || 'Contact Us'}
+                  style={cta.style === 'outline' ? 'outline' : 'solid'}
+                  size="lg"
+                  showArrow={Boolean(cta.showArrow)}
+                  className="w-full text-center"
+                  onClick={() => setIsOpen(false)}
+                />
               </div>
             )}
 

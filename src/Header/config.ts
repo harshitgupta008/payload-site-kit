@@ -243,7 +243,10 @@ export const Header: GlobalConfig = {
                   defaultValue: 'link',
                   options: [
                     { label: 'Link to Page / URL', value: 'link' },
-                    { label: 'Open Popup Form (Forms Phase)', value: 'popupForm' },
+                    { label: 'Open Popup Form (Modal)', value: 'popupForm' },
+                    { label: 'Open Popup Content (Modal)', value: 'popupContent' },
+                    { label: 'Phone Call (tel:)', value: 'tel' },
+                    { label: 'WhatsApp Chat', value: 'whatsapp' },
                   ],
                   admin: {
                     width: '35%',
@@ -276,6 +279,7 @@ export const Header: GlobalConfig = {
                   admin: {
                     width: '50%',
                     condition: (_, siblingData) => Boolean(siblingData?.enableCTA),
+                    placeholder: 'e.g. Contact Us, Get Started',
                   },
                 },
                 {
@@ -290,13 +294,36 @@ export const Header: GlobalConfig = {
                 },
               ],
             },
+            {
+              name: 'form',
+              type: 'relationship',
+              relationTo: 'forms',
+              label: 'Popup Form to Open in Modal',
+              admin: {
+                condition: (_, siblingData) =>
+                  Boolean(siblingData?.enableCTA) && siblingData?.action === 'popupForm',
+                description: 'Select the form that opens in the modal dialog when clicked.',
+              },
+            },
+            {
+              name: 'phone',
+              type: 'text',
+              label: 'Phone Number (with country code)',
+              admin: {
+                condition: (_, siblingData) =>
+                  Boolean(siblingData?.enableCTA) &&
+                  (siblingData?.action === 'tel' || siblingData?.action === 'whatsapp'),
+                placeholder: '+1 234 567 8900',
+              },
+            },
             link({
               appearances: false,
               disableLabel: true,
               overrides: {
                 admin: {
                   condition: (_, siblingData) =>
-                    Boolean(siblingData?.enableCTA) && siblingData?.action !== 'popupForm',
+                    Boolean(siblingData?.enableCTA) &&
+                    (!siblingData?.action || siblingData?.action === 'link'),
                 },
               },
             }),
