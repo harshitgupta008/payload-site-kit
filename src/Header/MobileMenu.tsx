@@ -123,15 +123,20 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                               onClick={() => setIsOpen(false)}
                               className="min-h-[44px] flex items-center justify-between py-2 text-foreground/80 hover:text-foreground font-medium text-base group"
                             >
-                              <div className="flex flex-col">
-                                <span>{child.label}</span>
+                              <div className="flex flex-col min-w-0 flex-1 pr-2 text-left">
+                                <span className="font-semibold text-foreground group-hover:text-primary transition-colors break-words whitespace-normal leading-snug">
+                                  {child.label}
+                                </span>
                                 {child.description && (
-                                  <span className="text-xs text-muted-foreground">
+                                  <span
+                                    title={child.description}
+                                    className="text-xs text-muted-foreground break-words whitespace-normal leading-relaxed mt-0.5 line-clamp-3"
+                                  >
                                     {child.description}
                                   </span>
                                 )}
                               </div>
-                              <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0" />
+                              <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0 mt-1" />
                             </CMSLink>
                           ))}
                         </div>

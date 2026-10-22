@@ -67,6 +67,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               label={item.label}
               children={item.children || []}
               isUppercase={isUppercase}
+              dropdownWidth={item.dropdownWidth || (navStyle as any)?.dropdownWidth || 'auto'}
+              dropdownStyle={item.dropdownStyle || (navStyle as any)?.dropdownStyle || 'list'}
             />
           )
         }

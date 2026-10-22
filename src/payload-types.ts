@@ -3254,11 +3254,17 @@ export interface Header {
               } | null);
           url?: string | null;
         };
+        dropdownWidth?: ('auto' | 'narrow' | 'wide') | null;
+        dropdownStyle?: ('list' | 'cards' | 'mega') | null;
         children?:
           | {
               label: string;
               /**
-               * Optional helper text beneath label.
+               * Optional small icon or preview visual.
+               */
+              icon?: (string | null) | Media;
+              /**
+               * Optional helper text beneath label (wraps cleanly to 2-3 lines).
                */
               description?: string | null;
               link?: {
@@ -3285,6 +3291,8 @@ export interface Header {
     activeStyle?: ('underline' | 'color' | 'pill') | null;
     uppercase?: boolean | null;
     navAlign?: ('right' | 'center') | null;
+    dropdownWidth?: ('auto' | 'narrow' | 'wide') | null;
+    dropdownStyle?: ('list' | 'cards' | 'mega') | null;
   };
   cta?: {
     enableCTA?: boolean | null;
@@ -3500,10 +3508,13 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
             };
+        dropdownWidth?: T;
+        dropdownStyle?: T;
         children?:
           | T
           | {
               label?: T;
+              icon?: T;
               description?: T;
               link?:
                 | T
@@ -3523,6 +3534,8 @@ export interface HeaderSelect<T extends boolean = true> {
         activeStyle?: T;
         uppercase?: T;
         navAlign?: T;
+        dropdownWidth?: T;
+        dropdownStyle?: T;
       };
   cta?:
     | T

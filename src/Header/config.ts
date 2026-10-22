@@ -123,6 +123,42 @@ export const Header: GlobalConfig = {
               },
             }),
             {
+              type: 'row',
+              admin: {
+                condition: (_, siblingData) => siblingData?.type === 'dropdown',
+              },
+              fields: [
+                {
+                  name: 'dropdownWidth',
+                  type: 'select',
+                  label: 'Dropdown Width',
+                  defaultValue: 'auto',
+                  options: [
+                    { label: 'Auto (Content Adaptive)', value: 'auto' },
+                    { label: 'Narrow', value: 'narrow' },
+                    { label: 'Wide', value: 'wide' },
+                  ],
+                  admin: {
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'dropdownStyle',
+                  type: 'select',
+                  label: 'Dropdown Visual Style',
+                  defaultValue: 'list',
+                  options: [
+                    { label: 'Standard List', value: 'list' },
+                    { label: 'Cards (with Icons)', value: 'cards' },
+                    { label: 'Mega Menu (Multi-Column)', value: 'mega' },
+                  ],
+                  admin: {
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+            {
               name: 'children',
               type: 'array',
               label: 'Dropdown Items',
@@ -144,15 +180,24 @@ export const Header: GlobalConfig = {
                       },
                     },
                     {
-                      name: 'description',
-                      type: 'text',
-                      label: 'Short Description',
+                      name: 'icon',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Item Icon / Image (Optional)',
                       admin: {
                         width: '50%',
-                        description: 'Optional helper text beneath label.',
+                        description: 'Optional small icon or preview visual.',
                       },
                     },
                   ],
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  label: 'Short Description',
+                  admin: {
+                    description: 'Optional helper text beneath label (wraps cleanly to 2-3 lines).',
+                  },
                 },
                 link({
                   appearances: false,
@@ -204,6 +249,39 @@ export const Header: GlobalConfig = {
                   ],
                   admin: {
                     width: '33.33%',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'dropdownWidth',
+                  type: 'select',
+                  label: 'Default Dropdown Width',
+                  defaultValue: 'auto',
+                  options: [
+                    { label: 'Auto (Content Adaptive)', value: 'auto' },
+                    { label: 'Narrow', value: 'narrow' },
+                    { label: 'Wide', value: 'wide' },
+                  ],
+                  admin: {
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'dropdownStyle',
+                  type: 'select',
+                  label: 'Default Dropdown Style',
+                  defaultValue: 'list',
+                  options: [
+                    { label: 'Standard List', value: 'list' },
+                    { label: 'Cards (with Icons)', value: 'cards' },
+                    { label: 'Mega Menu (Multi-Column)', value: 'mega' },
+                  ],
+                  admin: {
+                    width: '50%',
                   },
                 },
               ],
