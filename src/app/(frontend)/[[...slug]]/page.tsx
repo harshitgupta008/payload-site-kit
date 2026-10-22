@@ -75,6 +75,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   const { hero, layout } = page
+  const hasOldHero = Boolean(hero?.type && hero.type !== 'none')
 
   return (
     <article className="pt-16 pb-24">
@@ -85,7 +86,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      <RenderBlocks blocks={layout} hasOldHero={hasOldHero} />
     </article>
   )
 }

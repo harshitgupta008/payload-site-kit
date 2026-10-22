@@ -7,6 +7,13 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { ImageTextBlock } from '@/blocks/ImageText/Component'
+import { HeroBlockComponent } from '@/blocks/HeroBlock/Component'
+import { ServicesGridBlock } from '@/blocks/ServicesGrid/Component'
+import { FAQBlock } from '@/blocks/FAQ/Component'
+import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
+import { PricingBlock } from '@/blocks/Pricing/Component'
+import { GalleryBlock } from '@/blocks/Gallery/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -14,12 +21,20 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  imageText: ImageTextBlock,
+  heroBlock: HeroBlockComponent,
+  servicesGrid: ServicesGridBlock,
+  faq: FAQBlock,
+  testimonials: TestimonialsBlock,
+  pricing: PricingBlock,
+  gallery: GalleryBlock,
 }
 
 export const RenderBlocks: React.FC<{
   blocks?: Page['layout']
+  hasOldHero?: boolean
 }> = (props) => {
-  const { blocks } = props
+  const { blocks, hasOldHero } = props
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
@@ -35,7 +50,7 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div className="my-16" key={index}>
-                  <Block {...(block as any)} disableInnerContainer />
+                  <Block {...(block as any)} disableInnerContainer hasOldHero={hasOldHero} />
                 </div>
               )
             }

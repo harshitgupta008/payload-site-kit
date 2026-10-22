@@ -203,7 +203,22 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[] | null;
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | ImageTextBlock
+        | HeroBlockProps
+        | ServicesGridBlock
+        | FAQBlock
+        | TestimonialsBlock
+        | PricingBlock
+        | GalleryBlock
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -499,8 +514,46 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Main title above all content columns.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Supporting text displayed beneath the title.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
   columns?:
     | {
+        /**
+         * Optional heading for this individual section column.
+         */
+        title?: string | null;
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
         richText?: {
           root: {
@@ -778,6 +831,511 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageTextBlock".
+ */
+export interface ImageTextBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Optional header above the image and text section.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Subtitle or introduction text.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  /**
+   * Side where the image appears on desktop screens.
+   */
+  imagePosition?: ('left' | 'right') | null;
+  /**
+   * Which element stacks on top on mobile devices.
+   */
+  mobileOrder?: ('image-first' | 'text-first') | null;
+  /**
+   * Align content vertically relative to the image.
+   */
+  verticalAlign?: ('center' | 'top') | null;
+  /**
+   * Image displayed alongside the text content.
+   */
+  image: string | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional bullet points with checkmarks displayed beneath the content.
+   */
+  bulletPoints?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  enableLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlockProps".
+ */
+export interface HeroBlockProps {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Main prominent headline for this section (rendered as h1 if primary hero).
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Subtitle or value proposition pitch.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  /**
+   * Choose layout arrangement for the hero section.
+   */
+  variant?: ('centered' | 'split-right' | 'split-left') | null;
+  /**
+   * Displayed as banner or beside text with priority loading.
+   */
+  image?: (string | null) | Media;
+  /**
+   * Primary and secondary call-to-action buttons.
+   */
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesGridBlock".
+ */
+export interface ServicesGridBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Heading for services or features overview.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Introductory statement about capabilities or offerings.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  /**
+   * Number of service cards displayed per row on desktop.
+   */
+  columns?: ('2' | '3' | '4') | null;
+  cards?:
+    | {
+        /**
+         * Recommended SVG or square PNG icon.
+         */
+        icon?: (string | null) | Media;
+        title: string;
+        description: string;
+        enableLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'servicesGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Frequently Asked Questions heading.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Brief explanation or invitation to contact support.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  items: {
+    question: string;
+    answer: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Social proof or client testimonials headline.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Subtitle highlighting customer satisfaction.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  /**
+   * Choose between a multi-card grid or a single prominent featured testimonial.
+   */
+  layout?: ('grid' | 'single') | null;
+  items: {
+    quote: string;
+    name: string;
+    role?: string | null;
+    photo?: (string | null) | Media;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonials';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingBlock".
+ */
+export interface PricingBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Pricing plans and subscription tiers headline.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Billing details or guarantee note.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  plans: {
+    highlighted?: boolean | null;
+    name: string;
+    badge?: string | null;
+    price: string;
+    period?: string | null;
+    description?: string | null;
+    features: {
+      feature: string;
+      id?: string | null;
+    }[];
+    /**
+     * Call to action button for this plan.
+     */
+    link: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+      /**
+       * Choose how the link should be rendered.
+       */
+      appearance?: ('default' | 'outline') | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pricing';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  /**
+   * Optional heading and description for this section.
+   */
+  sectionHeader?: {
+    /**
+     * Gallery or media showcase headline.
+     */
+    title?: string | null;
+    /**
+     * Horizontal alignment of the title and description.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Description or context for the image collection.
+     */
+    description?: string | null;
+  };
+  /**
+   * Controls background color, vertical padding, and entry animation.
+   */
+  sectionStyle?: {
+    /**
+     * Applies theme token background colors respecting light/dark mode.
+     */
+    background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Top and bottom section padding.
+     */
+    spacing?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Entrance animation when scrolling into viewport.
+     */
+    animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
+  };
+  /**
+   * Number of images displayed per row on desktop screens.
+   */
+  columns?: ('2' | '3' | '4') | null;
+  images: {
+    image: string | Media;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1087,6 +1645,13 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        imageText?: T | ImageTextBlockSelect<T>;
+        heroBlock?: T | HeroBlockPropsSelect<T>;
+        servicesGrid?: T | ServicesGridBlockSelect<T>;
+        faq?: T | FAQBlockSelect<T>;
+        testimonials?: T | TestimonialsBlockSelect<T>;
+        pricing?: T | PricingBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
       };
   meta?:
     | T
@@ -1132,9 +1697,24 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
   columns?:
     | T
     | {
+        title?: T;
         size?: T;
         richText?: T;
         enableLink?: T;
@@ -1184,6 +1764,271 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageTextBlock_select".
+ */
+export interface ImageTextBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  imagePosition?: T;
+  mobileOrder?: T;
+  verticalAlign?: T;
+  image?: T;
+  content?: T;
+  bulletPoints?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  enableLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlockProps_select".
+ */
+export interface HeroBlockPropsSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  variant?: T;
+  image?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesGridBlock_select".
+ */
+export interface ServicesGridBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  columns?: T;
+  cards?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        enableLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock_select".
+ */
+export interface FAQBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  layout?: T;
+  items?:
+    | T
+    | {
+        quote?: T;
+        name?: T;
+        role?: T;
+        photo?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingBlock_select".
+ */
+export interface PricingBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  plans?:
+    | T
+    | {
+        highlighted?: T;
+        name?: T;
+        badge?: T;
+        price?: T;
+        period?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              feature?: T;
+              id?: T;
+            };
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  sectionHeader?:
+    | T
+    | {
+        title?: T;
+        alignment?: T;
+        description?: T;
+      };
+  sectionStyle?:
+    | T
+    | {
+        background?: T;
+        spacing?: T;
+        animation?: T;
+      };
+  columns?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

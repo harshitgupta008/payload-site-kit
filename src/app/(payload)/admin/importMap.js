@@ -9,6 +9,11 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { RowLabel as RowLabel_51c3dfee50eb83899fbad8523b6b162e } from '@/blocks/Content/RowLabel'
+import { RowLabel as RowLabel_e2fdc401aac3ebde8fca8e8af9be3c95 } from '@/blocks/ServicesGrid/RowLabel'
+import { RowLabel as RowLabel_7a0a1ede3caede510531ae1d1981b8cd } from '@/blocks/FAQ/RowLabel'
+import { RowLabel as RowLabel_7d0512708dc3b45d4316940f413f8c38 } from '@/blocks/Testimonials/RowLabel'
+import { RowLabel as RowLabel_6822cfe5135c41e38f3fb45485b7d11e } from '@/blocks/Pricing/RowLabel'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -41,6 +46,11 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@/blocks/Content/RowLabel#RowLabel": RowLabel_51c3dfee50eb83899fbad8523b6b162e,
+  "@/blocks/ServicesGrid/RowLabel#RowLabel": RowLabel_e2fdc401aac3ebde8fca8e8af9be3c95,
+  "@/blocks/FAQ/RowLabel#RowLabel": RowLabel_7a0a1ede3caede510531ae1d1981b8cd,
+  "@/blocks/Testimonials/RowLabel#RowLabel": RowLabel_7d0512708dc3b45d4316940f413f8c38,
+  "@/blocks/Pricing/RowLabel#RowLabel": RowLabel_6822cfe5135c41e38f3fb45485b7d11e,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
