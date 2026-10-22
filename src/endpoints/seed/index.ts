@@ -48,9 +48,7 @@ export const seed = async ({
     globals.map((global) =>
       payload.updateGlobal({
         slug: global,
-        data: {
-          navItems: [],
-        },
+        data: {} as any,
         depth: 0,
         context: {
           disableRevalidate: true,
@@ -223,16 +221,18 @@ export const seed = async ({
       data: {
         navItems: [
           {
+            label: 'Posts',
+            type: 'link',
             link: {
               type: 'custom',
-              label: 'Posts',
               url: '/posts',
             },
           },
           {
+            label: 'Contact',
+            type: 'link',
             link: {
               type: 'reference',
-              label: 'Contact',
               reference: {
                 relationTo: 'pages',
                 value: contactPage.id,
@@ -240,36 +240,93 @@ export const seed = async ({
             },
           },
         ],
+        cta: {
+          enableCTA: true,
+          label: 'Get in Touch',
+          action: 'link',
+          style: 'solid',
+          showArrow: true,
+          link: {
+            type: 'reference',
+            reference: {
+              relationTo: 'pages',
+              value: contactPage.id,
+            },
+          },
+        },
+        layout: {
+          variant: 'default',
+          sticky: true,
+          background: 'solid',
+        },
       },
     }),
     payload.updateGlobal({
       slug: 'footer',
       data: {
-        navItems: [
+        columns: [
           {
-            link: {
-              type: 'custom',
-              label: 'Admin',
-              url: '/admin',
-            },
+            title: 'Navigation',
+            links: [
+              {
+                label: 'Posts',
+                link: {
+                  type: 'custom',
+                  url: '/posts',
+                },
+              },
+              {
+                label: 'Contact',
+                link: {
+                  type: 'reference',
+                  reference: {
+                    relationTo: 'pages',
+                    value: contactPage.id,
+                  },
+                },
+              },
+            ],
           },
           {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
-            },
+            title: 'Resources',
+            links: [
+              {
+                label: 'Admin',
+                link: {
+                  type: 'custom',
+                  url: '/admin',
+                },
+              },
+              {
+                label: 'Documentation',
+                link: {
+                  type: 'custom',
+                  newTab: true,
+                  url: 'https://payloadcms.com/docs',
+                },
+              },
+            ],
           },
         ],
+        bottomBar: {
+          copyright: '© {year} All rights reserved.',
+          links: [
+            {
+              label: 'Terms & Conditions',
+              link: {
+                type: 'custom',
+                url: '#',
+              },
+            },
+            {
+              label: 'Privacy Policy',
+              link: {
+                type: 'custom',
+                url: '#',
+              },
+            },
+          ],
+        },
       },
     }),
   ])

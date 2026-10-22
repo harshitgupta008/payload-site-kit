@@ -2798,9 +2798,24 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: string;
+  /**
+   * Falls back to Site Settings logo or site name.
+   */
+  logo?: (string | null) | Media;
+  /**
+   * Used when header is transparent over hero visuals.
+   */
+  logoOnTransparent?: (string | null) | Media;
+  logoSize?: ('small' | 'medium' | 'large') | null;
   navItems?:
     | {
-        link: {
+        label: string;
+        type?: ('link' | 'dropdown') | null;
+        /**
+         * Styled like a button (e.g. for Contact).
+         */
+        highlight?: boolean | null;
+        link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -2813,11 +2828,94 @@ export interface Header {
                 value: string | Post;
               } | null);
           url?: string | null;
-          label: string;
         };
+        children?:
+          | {
+              label: string;
+              /**
+               * Optional helper text beneath label.
+               */
+              description?: string | null;
+              link?: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                url?: string | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  navStyle?: {
+    activeStyle?: ('underline' | 'color' | 'pill') | null;
+    uppercase?: boolean | null;
+    navAlign?: ('right' | 'center') | null;
+  };
+  cta?: {
+    enableCTA?: boolean | null;
+    action?: ('link' | 'popupForm') | null;
+    style?: ('solid' | 'outline') | null;
+    label?: string | null;
+    showArrow?: boolean | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+    };
+  };
+  layout?: {
+    variant?: ('default' | 'centered' | 'split') | null;
+    background?: ('solid' | 'transparent' | 'primary') | null;
+    sticky?: boolean | null;
+    transparentOnTop?: boolean | null;
+    showSearch?: boolean | null;
+    showThemeToggle?: boolean | null;
+    containerWidth?: ('contained' | 'full') | null;
+  };
+  announcementBar?: {
+    enable?: boolean | null;
+    background?: ('primary' | 'dark' | 'light') | null;
+    dismissible?: boolean | null;
+    text?: string | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+      /**
+       * Choose how the link should be rendered.
+       */
+      appearance?: ('default' | 'outline') | null;
+    };
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2827,26 +2925,85 @@ export interface Header {
  */
 export interface Footer {
   id: string;
-  navItems?:
+  brand?: {
+    /**
+     * Falls back to Site Settings logo or site name.
+     */
+    logo?: (string | null) | Media;
+    /**
+     * Short statement displayed beside or beneath the brand logo.
+     */
+    description?: string | null;
+  };
+  columns?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
+        title: string;
+        links?:
+          | {
+              label?: string | null;
+              link?: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                url?: string | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  contact?: {
+    address?: string | null;
+    phone?: string | null;
+    email?: string | null;
+  };
+  social?: {
+    /**
+     * Renders platform icons configured in Site Settings.
+     */
+    showSocialLinks?: boolean | null;
+  };
+  bottomBar?: {
+    /**
+     * {year} is automatically replaced with the current year.
+     */
+    copyright?: string | null;
+    links?:
+      | {
+          label?: string | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  layout?: {
+    variant?: ('columns' | 'centered' | 'minimal') | null;
+    background?: ('muted' | 'dark' | 'primary') | null;
+    containerWidth?: ('contained' | 'full') | null;
+    showThemeToggle?: boolean | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2896,9 +3053,82 @@ export interface SiteSetting {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
+  logoOnTransparent?: T;
+  logoSize?: T;
   navItems?:
     | T
     | {
+        label?: T;
+        type?: T;
+        highlight?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+            };
+        children?:
+          | T
+          | {
+              label?: T;
+              description?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  navStyle?:
+    | T
+    | {
+        activeStyle?: T;
+        uppercase?: T;
+        navAlign?: T;
+      };
+  cta?:
+    | T
+    | {
+        enableCTA?: T;
+        action?: T;
+        style?: T;
+        label?: T;
+        showArrow?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+            };
+      };
+  layout?:
+    | T
+    | {
+        variant?: T;
+        background?: T;
+        sticky?: T;
+        transparentOnTop?: T;
+        showSearch?: T;
+        showThemeToggle?: T;
+        containerWidth?: T;
+      };
+  announcementBar?:
+    | T
+    | {
+        enable?: T;
+        background?: T;
+        dismissible?: T;
+        text?: T;
         link?:
           | T
           | {
@@ -2907,8 +3137,8 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              appearance?: T;
             };
-        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2919,19 +3149,70 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  brand?:
     | T
     | {
-        link?:
+        logo?: T;
+        description?: T;
+      };
+  columns?:
+    | T
+    | {
+        title?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
               label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              id?: T;
             };
         id?: T;
+      };
+  contact?:
+    | T
+    | {
+        address?: T;
+        phone?: T;
+        email?: T;
+      };
+  social?:
+    | T
+    | {
+        showSocialLinks?: T;
+      };
+  bottomBar?:
+    | T
+    | {
+        copyright?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              id?: T;
+            };
+      };
+  layout?:
+    | T
+    | {
+        variant?: T;
+        background?: T;
+        containerWidth?: T;
+        showThemeToggle?: T;
       };
   updatedAt?: T;
   createdAt?: T;
