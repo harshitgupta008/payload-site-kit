@@ -7,6 +7,7 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
+import { buttonBgOptions, buttonTextColorOptions } from '@/utilities/colorOptions'
 
 export type ActionVariant =
   | 'link'
@@ -96,6 +97,58 @@ export const actionField = (options: ActionFieldOptions = {}): Field => {
                   defaultValue: false,
                   admin: {
                     width: '50%',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'row' as const,
+              fields: [
+                {
+                  name: 'buttonBg',
+                  type: 'select' as const,
+                  label: 'Button Background',
+                  defaultValue: 'default',
+                  options: buttonBgOptions,
+                  admin: {
+                    width: '50%',
+                    description: 'Override button background color.',
+                  },
+                },
+                {
+                  name: 'customButtonBg',
+                  type: 'text' as const,
+                  label: 'Custom Background (Hex)',
+                  admin: {
+                    width: '50%',
+                    condition: (_: any, siblingData: any) => siblingData?.buttonBg === 'custom',
+                    placeholder: 'e.g. #2563eb',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'row' as const,
+              fields: [
+                {
+                  name: 'buttonTextColor',
+                  type: 'select' as const,
+                  label: 'Button Text Color',
+                  defaultValue: 'auto',
+                  options: buttonTextColorOptions,
+                  admin: {
+                    width: '50%',
+                    description: 'Override button text / font color.',
+                  },
+                },
+                {
+                  name: 'customButtonTextColor',
+                  type: 'text' as const,
+                  label: 'Custom Text Color (Hex)',
+                  admin: {
+                    width: '50%',
+                    condition: (_: any, siblingData: any) => siblingData?.buttonTextColor === 'custom',
+                    placeholder: 'e.g. #ffffff',
                   },
                 },
               ],

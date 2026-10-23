@@ -3,6 +3,8 @@ import { linkGroup } from '@/fields/linkGroup'
 import { sectionHeader } from '@/fields/sectionHeader'
 import { sectionStyle } from '@/fields/sectionStyle'
 
+import { actionField } from '@/fields/action'
+
 export const HeroBlock: Block = {
   slug: 'heroBlock',
   interfaceName: 'HeroBlockProps',
@@ -60,11 +62,23 @@ export const HeroBlock: Block = {
         description: 'Displayed as banner or beside text with priority loading.',
       },
     },
+    {
+      name: 'buttons',
+      type: 'array',
+      label: 'Action Buttons',
+      maxRows: 3,
+      admin: {
+        description: 'Add buttons (Links, Modals, Popups, Phone calls, Downloads) with custom background and text colors.',
+      },
+      fields: [
+        actionField({ disableLabel: false, includeStyle: true }),
+      ],
+    },
     linkGroup({
       overrides: {
         maxRows: 2,
         admin: {
-          description: 'Primary and secondary call-to-action buttons.',
+          description: 'Legacy link buttons (fallback).',
         },
       },
     }),

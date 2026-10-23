@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { DynamicForm } from '@/components/DynamicForm'
 import RichText from '@/components/RichText'
@@ -22,35 +23,70 @@ export const FormModal: React.FC<FormModalProps> = ({
   title,
   content,
 }) => {
+  const [mounted, setMounted] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
   const previousActiveElement = useRef<HTMLElement | null>(null)
 
-  // Manage focus and scroll lock
   useEffect(() => {
-    if (isOpen) {
-      previousActiveElement.current = document.activeElement as HTMLElement
-      document.body.style.overflow = 'hidden'
+    setMounted(true)
+  }, [])
 
-      // Focus first interactive element or close button
-      const timer = setTimeout(() => {
-        if (modalRef.current) {
-          const focusable = modalRef.current.querySelector<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-          )
-          focusable?.focus()
-        }
-      }, 50)
+  // Manage focus and complete scroll lock
+  useEffect(() => {
+    if (!isOpen) return
 
-      return () => clearTimeout(timer)
-    } else {
+    const originalBodyOverflow = document.body.style.overflow
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    previousActiveElement.current = document.activeElement as HTMLElement
+
+    // Completely lock scrolling on both html and body while modal is active
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+
+    // Prevent wheel and touch scrolling on page behind the modal
+    const handleWheelOrTouch = (e: WheelEvent | TouchEvent) => {
+      if (modalRef.current && modalRef.current.contains(e.target as Node)) {
+        return // allow scrolling inside the modal dialog itself
+      }
+      e.preventDefault()
+    }
+
+    window.addEventListener('wheel', handleWheelOrTouch, { passive: false })
+    window.addEventListener('touchmove', handleWheelOrTouch, { passive: false })
+
+    // Focus first interactive element or close button
+    const timer = setTimeout(() => {
+      if (modalRef.current) {
+        const focusable = modalRef.current.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        focusable?.focus()
+      }
+    }, 50)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('wheel', handleWheelOrTouch)
+      window.removeEventListener('touchmove', handleWheelOrTouch)
+
+      // Always restore scrollbar cleanly on modal close
+      document.body.style.removeProperty('overflow')
+      document.documentElement.style.removeProperty('overflow')
       document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+      if (originalBodyOverflow && originalBodyOverflow !== 'hidden') {
+        document.body.style.overflow = originalBodyOverflow
+      }
+      if (originalHtmlOverflow && originalHtmlOverflow !== 'hidden') {
+        document.documentElement.style.overflow = originalHtmlOverflow
+      }
+      // Trigger a window resize event so browsers immediately repaint scrollbars
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('resize'))
+      }
       if (previousActiveElement.current) {
         previousActiveElement.current.focus()
       }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
     }
   }, [isOpen])
 
@@ -65,20 +101,20 @@ export const FormModal: React.FC<FormModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
   const formTitle = typeof form === 'object' && form?.title ? form.title : title || 'Contact Us'
 
-  return (
+  const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-background/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -87,7 +123,7 @@ export const FormModal: React.FC<FormModalProps> = ({
       <div
         ref={modalRef}
         className={cn(
-          'relative w-full max-w-xl bg-card border border-border shadow-2xl rounded-2xl overflow-hidden z-10 my-auto flex flex-col',
+          'relative w-full max-w-xl bg-background border border-border shadow-2xl rounded-2xl overflow-hidden z-10 my-auto flex flex-col',
           'max-sm:fixed max-sm:inset-0 max-sm:w-full max-sm:h-full max-sm:rounded-none max-sm:border-0 max-sm:my-0 max-sm:overflow-y-auto',
           'animate-in zoom-in-95 fade-in duration-200',
         )}
@@ -115,4 +151,6 @@ export const FormModal: React.FC<FormModalProps> = ({
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }

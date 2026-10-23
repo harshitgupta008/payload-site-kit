@@ -47,6 +47,7 @@ export const FormBlock: React.FC<FormBlockProps> = (props) => {
   return (
     <SectionWrapper sectionStyle={sectionStyle} className="py-12 md:py-20">
       <SectionHeader
+        sectionHeader={sectionHeader}
         title={sectionHeader?.title}
         description={sectionHeader?.description}
         alignment={sectionHeader?.alignment}

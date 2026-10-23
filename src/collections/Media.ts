@@ -71,6 +71,14 @@ export const Media: CollectionConfig = {
         width: 1920,
       },
       {
+        name: 'mobile',
+        width: 828,
+      },
+      {
+        name: 'banner',
+        width: 1920,
+      },
+      {
         name: 'og',
         width: 1200,
         height: 630,

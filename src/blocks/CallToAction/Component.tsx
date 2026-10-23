@@ -35,6 +35,10 @@ export const CallToActionBlock: React.FC<CallToActionBlockProps> = ({ links, act
                 label={actionData?.label || item.label || item.link?.label || 'Learn More'}
                 appearance={item.link?.appearance}
                 style={actionData?.style || (item.link?.appearance === 'outline' ? 'outline' : 'solid')}
+                buttonBg={actionData?.buttonBg || item.buttonBg}
+                customButtonBg={actionData?.customButtonBg || item.customButtonBg}
+                buttonTextColor={actionData?.buttonTextColor || item.buttonTextColor}
+                customButtonTextColor={actionData?.customButtonTextColor || item.customButtonTextColor}
                 showArrow={Boolean(actionData?.showArrow)}
               />
             )

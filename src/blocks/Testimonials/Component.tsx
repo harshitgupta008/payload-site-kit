@@ -31,6 +31,7 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = (props) => {
   return (
     <SectionWrapper sectionStyle={sectionStyle}>
       <SectionHeader
+        sectionHeader={sectionHeader}
         title={sectionHeader?.title}
         description={sectionHeader?.description}
         alignment={sectionHeader?.alignment}

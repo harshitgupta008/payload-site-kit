@@ -23,6 +23,7 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   siteSettings,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false)
+  const headerRef = React.useRef<HTMLElement>(null)
 
   const layout = headerData?.layout
   const variant = layout?.variant || 'default'
@@ -43,15 +44,38 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   const logoOnTransparent = headerData?.logoOnTransparent || headerLogo
   const logoSize = headerData?.logoSize || 'medium'
 
-  // Scroll listener for sticky header and transparent-on-top transition
+  // Scroll and ResizeObserver listener for sticky header and dynamic --header-height
   useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight
+        if (height > 0) {
+          document.documentElement.style.setProperty('--header-height', `${height}px`)
+        }
+      }
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
 
+    updateHeaderHeight()
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('resize', updateHeaderHeight, { passive: true })
+
+    const observer = new ResizeObserver(() => {
+      updateHeaderHeight()
+    })
+    if (headerRef.current) {
+      observer.observe(headerRef.current)
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', updateHeaderHeight)
+      observer.disconnect()
+    }
   }, [])
 
   // Determine dynamic background and border styles
@@ -99,6 +123,7 @@ export const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
       <AnnouncementBar announcement={announcementBar} />
 
       <header
+        ref={headerRef}
         className={cn(
           'w-full z-30 transition-all duration-200',
           isSticky && 'sticky top-0',

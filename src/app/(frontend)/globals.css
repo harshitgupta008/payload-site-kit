@@ -42,6 +42,58 @@
 @source inline("border-primary/40");
 @source inline("min-h-[75svh]");
 @source inline("min-h-[50svh]");
+@source inline("bg-background/40");
+@source inline("bg-background/95");
+@source inline("bg-foreground/40");
+@source inline("bg-foreground/80");
+@source inline("bg-primary/30");
+@source inline("bg-primary/50");
+@source inline("bg-primary/80");
+@source inline("object-left-top");
+@source inline("object-right-top");
+@source inline("object-left-bottom");
+@source inline("object-right-bottom");
+@source inline("!text-white");
+@source inline("!text-slate-950");
+@source inline("!text-primary");
+@source inline("bg-slate-900");
+@source inline("bg-slate-800");
+@source inline("hover:bg-slate-800");
+@source inline("hover:bg-slate-700");
+@source inline("hover:bg-slate-100");
+@source inline("border-slate-200");
+@source inline("z-[99999]");
+@source inline("text-amber-500");
+@source inline("dark:text-amber-400");
+@source inline("text-blue-600");
+@source inline("dark:text-blue-400");
+@source inline("text-emerald-600");
+@source inline("dark:text-emerald-400");
+@source inline("text-rose-500");
+@source inline("dark:text-rose-400");
+@source inline("text-purple-600");
+@source inline("dark:text-purple-400");
+@source inline("bg-amber-500");
+@source inline("hover:bg-amber-600");
+@source inline("bg-emerald-600");
+@source inline("hover:bg-emerald-700");
+@source inline("bg-rose-500");
+@source inline("hover:bg-rose-600");
+@source inline("bg-purple-600");
+@source inline("hover:bg-purple-700");
+@source inline("bg-blue-600");
+@source inline("hover:bg-blue-700");
+@source inline("!text-amber-500");
+@source inline("!text-secondary-foreground");
+@source inline("!text-emerald-500");
+@source inline("!text-rose-500");
+@source inline("!text-purple-500");
+@source inline("!text-blue-500");
+@source inline("text-white/85");
+@source inline("text-white/90");
+@source inline("text-slate-700");
+@source inline("text-primary/85");
+@source inline("text-secondary-foreground/85");
 
 @theme {
   --breakpoint-sm: 40rem;
@@ -231,6 +283,8 @@
 
 html {
   opacity: 0;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 html[data-theme='dark'],

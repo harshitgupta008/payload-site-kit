@@ -18,6 +18,7 @@ type CMSLinkType = {
   size?: ButtonProps['size'] | null
   type?: 'custom' | 'reference' | null
   url?: string | null
+  style?: React.CSSProperties
 }
 
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
@@ -31,6 +32,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     reference,
     size: sizeFromProps,
     url,
+    style,
   } = props
 
   let href: string | undefined = undefined
@@ -64,10 +66,14 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   // 1. Missing or empty href: render children directly without a broken link
   if (!href) {
     if (appearance === 'inline') {
-      return <span className={className}>{content}</span>
+      return (
+        <span className={className} style={style}>
+          {content}
+        </span>
+      )
     }
     return (
-      <Button className={className} size={size} variant={appearance}>
+      <Button className={className} size={size} variant={appearance} style={style}>
         {content}
       </Button>
     )
@@ -78,13 +84,13 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   if (isMailOrTel) {
     if (appearance === 'inline') {
       return (
-        <a className={cn(className)} href={href}>
+        <a className={cn(className)} href={href} style={style}>
           {content}
         </a>
       )
     }
     return (
-      <Button asChild className={className} size={size} variant={appearance}>
+      <Button asChild className={className} size={size} variant={appearance} style={style}>
         <a className={cn(className)} href={href}>
           {content}
         </a>
@@ -98,13 +104,13 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     const externalProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
     if (appearance === 'inline') {
       return (
-        <a className={cn(className)} href={href} {...externalProps}>
+        <a className={cn(className)} href={href} {...externalProps} style={style}>
           {content}
         </a>
       )
     }
     return (
-      <Button asChild className={className} size={size} variant={appearance}>
+      <Button asChild className={className} size={size} variant={appearance} style={style}>
         <a className={cn(className)} href={href} {...externalProps}>
           {content}
         </a>
@@ -117,14 +123,14 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   if (appearance === 'inline') {
     return (
-      <Link className={cn(className)} href={href} prefetch={true} {...newTabProps}>
+      <Link className={cn(className)} href={href} prefetch={true} {...newTabProps} style={style}>
         {content}
       </Link>
     )
   }
 
   return (
-    <Button asChild className={className} size={size} variant={appearance}>
+    <Button asChild className={className} size={size} variant={appearance} style={style}>
       <Link className={cn(className)} href={href} prefetch={true} {...newTabProps}>
         {content}
       </Link>

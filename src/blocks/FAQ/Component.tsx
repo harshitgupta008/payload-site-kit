@@ -50,6 +50,7 @@ export const FAQBlock: React.FC<FAQBlockProps> = (props) => {
   return (
     <SectionWrapper sectionStyle={sectionStyle}>
       <SectionHeader
+        sectionHeader={sectionHeader}
         title={sectionHeader?.title}
         description={sectionHeader?.description}
         alignment={sectionHeader?.alignment}

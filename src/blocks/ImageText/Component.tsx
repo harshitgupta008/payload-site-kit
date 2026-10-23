@@ -66,6 +66,7 @@ export const ImageTextBlock: React.FC<ImageTextBlockProps> = (props) => {
   return (
     <SectionWrapper sectionStyle={sectionStyle}>
       <SectionHeader
+        sectionHeader={sectionHeader}
         title={sectionHeader?.title}
         description={sectionHeader?.description}
         alignment={sectionHeader?.alignment}
@@ -75,14 +76,14 @@ export const ImageTextBlock: React.FC<ImageTextBlockProps> = (props) => {
       <div
         className={cn(
           'flex flex-col gap-10 md:gap-14 lg:gap-20 items-stretch',
-          isTopAlign ? 'lg:items-start' : 'lg:items-center',
-          isImageRight ? 'lg:flex-row-reverse' : 'lg:flex-row',
-          isTextFirst && 'flex-col-reverse',
+          imageUrl && isTopAlign ? 'lg:items-start' : 'lg:items-center',
+          imageUrl && (isImageRight ? 'lg:flex-row-reverse' : 'lg:flex-row'),
+          imageUrl && isTextFirst && 'flex-col-reverse',
         )}
       >
         {/* Media Column with Optional Decoration */}
-        <div className="w-full lg:w-1/2 flex-1">
-          {imageUrl && (
+        {imageUrl && (
+          <div className="w-full lg:w-1/2 flex-1">
             <div className="relative isolate p-2 sm:p-4">
               {/* Offset Shape Decoration */}
               {imageDecoration === 'offset-shape' && (
@@ -121,11 +122,11 @@ export const ImageTextBlock: React.FC<ImageTextBlockProps> = (props) => {
                 />
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Content Column */}
-        <div className="w-full lg:w-1/2 flex-1 flex flex-col justify-center">
+        <div className={cn('w-full flex flex-col justify-center', imageUrl ? 'lg:w-1/2 flex-1' : 'max-w-4xl mx-auto')}>
           {content && (
             <div className="prose dark:prose-invert max-w-none mb-6">
               <RichText data={content} enableGutter={false} />

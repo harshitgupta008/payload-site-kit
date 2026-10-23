@@ -1,16 +1,42 @@
 import type { Field } from 'payload'
 import type { Media } from '@/payload-types'
+import {
+  heightOptions,
+  mobileHeightOptions,
+  verticalAlignOptions,
+} from '@/lib/sectionHeight'
 
 export interface SectionStyleType {
   background?: 'none' | 'light' | 'dark' | 'primary' | null
   spacing?: 'small' | 'medium' | 'large' | null
   animation?: 'none' | 'fade-up' | 'fade-in' | 'zoom' | null
-  height?: 'fit' | 'screen' | 'tall' | 'medium' | null
+  height?:
+    | 'fit'
+    | 'compact'
+    | 'medium'
+    | 'tall'
+    | 'screen'
+    | 'screen-below-header'
+    | null
+  mobileHeight?:
+    | 'same-as-desktop'
+    | 'fit'
+    | 'compact'
+    | 'medium'
+    | 'tall'
+    | 'screen'
+    | 'screen-below-header'
+    | null
   contentVerticalAlign?: 'top' | 'center' | 'bottom' | null
   width?: 'contained' | 'wide' | 'full' | null
   accentColor?: 'primary' | 'secondary' | 'foreground' | null
+  textColor?: 'default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom' | null
+  customTextColor?: string | null
   backgroundImage?: string | Media | null
   overlay?: 'none' | 'light' | 'dark' | null
+  sideImage?: string | Media | null
+  sideImagePosition?: 'left' | 'right' | null
+  sideImageAspect?: '4:3' | '16:9' | '1:1' | 'natural' | null
 }
 
 export const sectionStyle = (): Field => {
@@ -26,7 +52,7 @@ export const sectionStyle = (): Field => {
         type: 'group',
         label: false,
         admin: {
-          description: 'Controls background color, height, container width, overlays, and animations.',
+          description: 'Controls background color, text color, height, container width, overlays, and animations.',
           hideGutter: true,
         },
         fields: [
@@ -45,8 +71,37 @@ export const sectionStyle = (): Field => {
                   { label: 'Primary Brand Color', value: 'primary' },
                 ],
                 admin: {
-                  width: '33.33%',
+                  width: '25%',
                   description: 'Theme token background colors.',
+                },
+              },
+              {
+                name: 'textColor',
+                type: 'select',
+                label: 'Section Text Color',
+                defaultValue: 'default',
+                options: [
+                  { label: 'Default (Theme Text)', value: 'default' },
+                  { label: 'Crisp White / Light', value: 'light' },
+                  { label: 'High-Contrast Dark', value: 'dark' },
+                  { label: 'Primary Brand Color', value: 'primary' },
+                  { label: 'Secondary / Accent Color', value: 'secondary' },
+                  { label: 'Muted Secondary Gray', value: 'muted' },
+                  { label: 'Custom Hex Color', value: 'custom' },
+                ],
+                admin: {
+                  width: '25%',
+                  description: 'Forces specific font color across section.',
+                },
+              },
+              {
+                name: 'customTextColor',
+                type: 'text',
+                label: 'Custom Text Color (Hex)',
+                admin: {
+                  width: '25%',
+                  condition: (_: any, siblingData: any) => siblingData?.textColor === 'custom',
+                  placeholder: 'e.g. #10b981',
                 },
               },
               {
@@ -60,7 +115,7 @@ export const sectionStyle = (): Field => {
                   { label: 'Large (Spacious padding)', value: 'large' },
                 ],
                 admin: {
-                  width: '33.33%',
+                  width: '25%',
                   description: 'Top and bottom section padding.',
                 },
               },
@@ -76,7 +131,7 @@ export const sectionStyle = (): Field => {
                   { label: 'Zoom In', value: 'zoom' },
                 ],
                 admin: {
-                  width: '33.33%',
+                  width: '25%',
                   description: 'Entrance animation on scroll.',
                 },
               },
@@ -90,15 +145,21 @@ export const sectionStyle = (): Field => {
                 type: 'select',
                 label: 'Section Height',
                 defaultValue: 'fit',
-                options: [
-                  { label: 'Fit Content (Default)', value: 'fit' },
-                  { label: 'Full Screen (100svh)', value: 'screen' },
-                  { label: 'Tall (~75svh)', value: 'tall' },
-                  { label: 'Medium (~50svh)', value: 'medium' },
-                ],
+                options: heightOptions,
                 admin: {
-                  width: '33.33%',
-                  description: 'Viewport height constraints for the section.',
+                  width: '25%',
+                  description: 'Viewport height boundary (min-h).',
+                },
+              },
+              {
+                name: 'mobileHeight',
+                type: 'select',
+                label: 'Mobile Height (under 768px)',
+                defaultValue: 'same-as-desktop',
+                options: mobileHeightOptions,
+                admin: {
+                  width: '25%',
+                  description: 'Optional separate height for phones.',
                 },
               },
               {
@@ -106,14 +167,10 @@ export const sectionStyle = (): Field => {
                 type: 'select',
                 label: 'Vertical Alignment',
                 defaultValue: 'center',
-                options: [
-                  { label: 'Top', value: 'top' },
-                  { label: 'Center', value: 'center' },
-                  { label: 'Bottom', value: 'bottom' },
-                ],
+                options: verticalAlignOptions,
                 admin: {
-                  width: '33.33%',
-                  description: 'Applies when height is taller than content.',
+                  width: '25%',
+                  description: 'Placement when height exceeds content.',
                   condition: (_, siblingData) =>
                     Boolean(siblingData?.height && siblingData.height !== 'fit'),
                 },
@@ -129,7 +186,7 @@ export const sectionStyle = (): Field => {
                   { label: 'Full Width', value: 'full' },
                 ],
                 admin: {
-                  width: '33.33%',
+                  width: '25%',
                   description: 'Horizontal content width boundary.',
                 },
               },
@@ -177,6 +234,51 @@ export const sectionStyle = (): Field => {
                   width: '33.33%',
                   description: 'Token-based overlay tint over background image.',
                   condition: (_, siblingData) => Boolean(siblingData?.backgroundImage),
+                },
+              },
+            ],
+          },
+          {
+            type: 'row',
+            fields: [
+              {
+                name: 'sideImage',
+                type: 'upload',
+                relationTo: 'media',
+                label: 'Section Side Image (Split Layout)',
+                admin: {
+                  width: '50%',
+                  description: 'Splits this section into a 2-column layout: content on one side, image on the other.',
+                },
+              },
+              {
+                name: 'sideImagePosition',
+                type: 'select',
+                label: 'Side Image Position',
+                defaultValue: 'right',
+                options: [
+                  { label: 'Divide: Image on Right (Content Left, Image Right)', value: 'right' },
+                  { label: 'Divide: Image on Left (Image Left, Content Right)', value: 'left' },
+                ],
+                admin: {
+                  width: '25%',
+                  condition: (_: any, siblingData: any) => Boolean(siblingData?.sideImage),
+                },
+              },
+              {
+                name: 'sideImageAspect',
+                type: 'select',
+                label: 'Side Image Aspect Ratio',
+                defaultValue: '4:3',
+                options: [
+                  { label: 'Classic (4:3)', value: '4:3' },
+                  { label: 'Widescreen (16:9)', value: '16:9' },
+                  { label: 'Square (1:1)', value: '1:1' },
+                  { label: 'Natural Ratio', value: 'natural' },
+                ],
+                admin: {
+                  width: '25%',
+                  condition: (_: any, siblingData: any) => Boolean(siblingData?.sideImage),
                 },
               },
             ],

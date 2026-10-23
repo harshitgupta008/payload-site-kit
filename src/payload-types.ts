@@ -161,7 +161,174 @@ export interface Page {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    /**
+     * Choose the banner style for this page. New pages default to Page Banner.
+     */
+    type: 'banner' | 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    eyebrow?: string | null;
+    /**
+     * Main prominent page heading. If left empty, falls back to the page title.
+     */
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Comma or space-separated words in the title to highlight.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    /**
+     * Scales fluidly with viewport.
+     */
+    titleSize?: ('small' | 'medium' | 'large' | 'extra-large') | null;
+    descriptionSize?: ('small' | 'medium' | 'large') | null;
+    /**
+     * Controls max line-length for readability.
+     */
+    textWidth?: ('narrow' | 'medium' | 'wide') | null;
+    /**
+     * Forces specific font color across all text in the banner.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    /**
+     * Enter any CSS color code (e.g. #ffffff, rgb(255,255,255)).
+     */
+    customTextColor?: string | null;
+    textAlign?: ('left' | 'center' | 'right') | null;
+    buttonsAlign?: ('follow-text' | 'left' | 'center' | 'right') | null;
+    /**
+     * Only applies when height is taller than content.
+     */
+    verticalAlign?: ('top' | 'center' | 'bottom') | null;
+    /**
+     * Full screen: fills the whole screen. Full screen below header: fills what is left under header. Content never cuts off.
+     */
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact' | 'image') | null;
+    /**
+     * Recommended: 1920px wide, under 500KB. Large files load slower.
+     */
+    image?: (string | null) | Media;
+    /**
+     * Optional tailored portrait or square crop for phones.
+     */
+    mobileImage?: (string | null) | Media;
+    isDecorative?: boolean | null;
+    imageMode?: ('background' | 'side' | 'below' | 'none') | null;
+    imagePosition?: ('left' | 'right') | null;
+    imageFit?: ('cover' | 'contain' | 'natural') | null;
+    /**
+     * Which part of the image stays visible when cropped.
+     */
+    focalPoint?:
+      | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+      | null;
+    /**
+     * Uses theme tokens with opacity.
+     */
+    overlay?: ('none' | 'dark' | 'light' | 'primary') | null;
+    overlayStrength?: ('low' | 'medium' | 'high') | null;
+    textTone?: ('auto' | 'light' | 'dark') | null;
+    /**
+     * Add up to 3 buttons (Links, Modals, Popups, Phone calls, Downloads).
+     */
+    buttons?:
+      | {
+          label: string;
+          style?: ('solid' | 'outline' | 'ghost') | null;
+          size?: ('small' | 'medium' | 'large') | null;
+          icon?: ('none' | 'arrow-right' | 'arrow-circle') | null;
+          /**
+           * Override button background color.
+           */
+          buttonBg?:
+            | (
+                | 'default'
+                | 'primary'
+                | 'secondary'
+                | 'dark'
+                | 'light'
+                | 'emerald'
+                | 'rose'
+                | 'amber'
+                | 'purple'
+                | 'blue'
+                | 'outline'
+                | 'transparent'
+                | 'custom'
+              )
+            | null;
+          customButtonBg?: string | null;
+          /**
+           * Override button text / font color.
+           */
+          buttonTextColor?:
+            | (
+                | 'auto'
+                | 'white'
+                | 'dark'
+                | 'primary'
+                | 'secondary'
+                | 'amber'
+                | 'emerald'
+                | 'rose'
+                | 'purple'
+                | 'blue'
+                | 'custom'
+              )
+            | null;
+          customButtonTextColor?: string | null;
+          actionData?: {
+            /**
+             * Choose the action triggered when this button is clicked.
+             */
+            action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+            link?: {
+              type?: ('reference' | 'custom') | null;
+              newTab?: boolean | null;
+              reference?:
+                | ({
+                    relationTo: 'pages';
+                    value: string | Page;
+                  } | null)
+                | ({
+                    relationTo: 'posts';
+                    value: string | Post;
+                  } | null);
+              url?: string | null;
+            };
+            /**
+             * Select the form that appears in the popup modal when clicked.
+             */
+            form?: (string | null) | Form;
+            /**
+             * Rich content displayed inside the modal dialog.
+             */
+            popupContent?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            phone?: string | null;
+            whatsappMessage?: string | null;
+            /**
+             * Upload or choose the file to download.
+             */
+            file?: (string | null) | Media;
+          };
+          id?: string | null;
+        }[]
+      | null;
     richText?: {
       root: {
         type: string;
@@ -233,56 +400,6 @@ export interface Page {
     noIndex?: boolean | null;
   };
   publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: string;
-  title: string;
-  heroImage?: (string | null) | Media;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | Media;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
-  authors?: (string | User)[] | null;
-  populatedAuthors?:
-    | {
-        id?: string | null;
-        name?: string | null;
-      }[]
-    | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -375,6 +492,22 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
+    mobile?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    banner?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     og?: {
       url?: string | null;
       width?: number | null;
@@ -410,6 +543,56 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: string;
+  title: string;
+  heroImage?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedPosts?: (string | Post)[] | null;
+  categories?: (string | Category)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (string | User)[] | null;
+  populatedAuthors?:
+    | {
+        id?: string | null;
+        name?: string | null;
+      }[]
+    | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -461,116 +644,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
- */
-export interface CallToActionBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Action buttons (links, popup forms in modals, phone calls, downloads).
-   */
-  actions?:
-    | {
-        actionData?: {
-          /**
-           * Choose the action triggered when this button is clicked.
-           */
-          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
-          label?: string | null;
-          style?: ('solid' | 'outline' | 'ghost') | null;
-          showArrow?: boolean | null;
-          link?: {
-            type?: ('reference' | 'custom') | null;
-            newTab?: boolean | null;
-            reference?:
-              | ({
-                  relationTo: 'pages';
-                  value: string | Page;
-                } | null)
-              | ({
-                  relationTo: 'posts';
-                  value: string | Post;
-                } | null);
-            url?: string | null;
-          };
-          /**
-           * Select the form that appears in the popup modal when clicked.
-           */
-          form?: (string | null) | Form;
-          /**
-           * Rich content displayed inside the modal dialog.
-           */
-          popupContent?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          phone?: string | null;
-          whatsappMessage?: string | null;
-          /**
-           * Upload or choose the file to download.
-           */
-          file?: (string | null) | Media;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Legacy link buttons (fallback).
-   */
-  links?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -766,11 +839,161 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Action buttons (links, popup forms in modals, phone calls, downloads).
+   */
+  actions?:
+    | {
+        actionData?: {
+          /**
+           * Choose the action triggered when this button is clicked.
+           */
+          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+          label?: string | null;
+          style?: ('solid' | 'outline' | 'ghost') | null;
+          showArrow?: boolean | null;
+          /**
+           * Override button background color.
+           */
+          buttonBg?:
+            | (
+                | 'default'
+                | 'primary'
+                | 'secondary'
+                | 'dark'
+                | 'light'
+                | 'emerald'
+                | 'rose'
+                | 'amber'
+                | 'purple'
+                | 'blue'
+                | 'outline'
+                | 'transparent'
+                | 'custom'
+              )
+            | null;
+          customButtonBg?: string | null;
+          /**
+           * Override button text / font color.
+           */
+          buttonTextColor?:
+            | (
+                | 'auto'
+                | 'white'
+                | 'dark'
+                | 'primary'
+                | 'secondary'
+                | 'amber'
+                | 'emerald'
+                | 'rose'
+                | 'purple'
+                | 'blue'
+                | 'custom'
+              )
+            | null;
+          customButtonTextColor?: string | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          /**
+           * Select the form that appears in the popup modal when clicked.
+           */
+          form?: (string | null) | Form;
+          /**
+           * Rich content displayed inside the modal dialog.
+           */
+          popupContent?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          phone?: string | null;
+          whatsappMessage?: string | null;
+          /**
+           * Upload or choose the file to download.
+           */
+          file?: (string | null) | Media;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Legacy link buttons (fallback).
+   */
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -785,15 +1008,61 @@ export interface ContentBlock {
      * Supporting text displayed beneath the title.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -803,11 +1072,15 @@ export interface ContentBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -826,6 +1099,12 @@ export interface ContentBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   columns?:
     | {
@@ -833,7 +1112,38 @@ export interface ContentBlock {
          * Optional heading for this individual section column.
          */
         title?: string | null;
-        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        /**
+         * Words in the column title to highlight.
+         */
+        highlightWords?: string | null;
+        highlightColor?:
+          ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+        customHighlightColor?: string | null;
+        titleColor?:
+          | (
+              | 'default'
+              | 'light'
+              | 'dark'
+              | 'primary'
+              | 'secondary'
+              | 'muted'
+              | 'amber'
+              | 'emerald'
+              | 'rose'
+              | 'purple'
+              | 'blue'
+              | 'custom'
+            )
+          | null;
+        customTitleColor?: string | null;
+        size?: ('full' | 'half' | 'oneThird' | 'twoThirds') | null;
+        /**
+         * Upload an image to divide this section left/right or display with text.
+         */
+        image?: (string | null) | Media;
+        imagePosition?: ('right' | 'left' | 'top' | 'bottom') | null;
+        imageAspect?: ('16:9' | '4:3' | '1:1' | 'auto') | null;
+        imageFit?: ('cover' | 'contain') | null;
         richText?: {
           root: {
             type: string;
@@ -850,6 +1160,97 @@ export interface ContentBlock {
           [k: string]: unknown;
         } | null;
         enableLink?: boolean | null;
+        actionData?: {
+          /**
+           * Choose the action triggered when this button is clicked.
+           */
+          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+          label?: string | null;
+          style?: ('solid' | 'outline' | 'ghost') | null;
+          showArrow?: boolean | null;
+          /**
+           * Override button background color.
+           */
+          buttonBg?:
+            | (
+                | 'default'
+                | 'primary'
+                | 'secondary'
+                | 'dark'
+                | 'light'
+                | 'emerald'
+                | 'rose'
+                | 'amber'
+                | 'purple'
+                | 'blue'
+                | 'outline'
+                | 'transparent'
+                | 'custom'
+              )
+            | null;
+          customButtonBg?: string | null;
+          /**
+           * Override button text / font color.
+           */
+          buttonTextColor?:
+            | (
+                | 'auto'
+                | 'white'
+                | 'dark'
+                | 'primary'
+                | 'secondary'
+                | 'amber'
+                | 'emerald'
+                | 'rose'
+                | 'purple'
+                | 'blue'
+                | 'custom'
+              )
+            | null;
+          customButtonTextColor?: string | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          /**
+           * Select the form that appears in the popup modal when clicked.
+           */
+          form?: (string | null) | Form;
+          /**
+           * Rich content displayed inside the modal dialog.
+           */
+          popupContent?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          phone?: string | null;
+          whatsappMessage?: string | null;
+          /**
+           * Upload or choose the file to download.
+           */
+          file?: (string | null) | Media;
+        };
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -926,7 +1327,7 @@ export interface ArchiveBlock {
  */
 export interface FormBlockProps {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -941,15 +1342,61 @@ export interface FormBlockProps {
      * Introductory statement or instructions.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -959,11 +1406,15 @@ export interface FormBlockProps {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -982,6 +1433,12 @@ export interface FormBlockProps {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Select the form definition to display.
@@ -1021,7 +1478,7 @@ export interface FormBlockProps {
  */
 export interface ImageTextBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1036,15 +1493,61 @@ export interface ImageTextBlock {
      * Subtitle or introduction text.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1054,11 +1557,15 @@ export interface ImageTextBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1077,6 +1584,12 @@ export interface ImageTextBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Side where the image appears on desktop screens.
@@ -1157,7 +1670,7 @@ export interface ImageTextBlock {
  */
 export interface HeroBlockProps {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1172,15 +1685,61 @@ export interface HeroBlockProps {
      * Subtitle or value proposition pitch.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1190,11 +1749,15 @@ export interface HeroBlockProps {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1213,6 +1776,12 @@ export interface HeroBlockProps {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Choose layout arrangement for the hero section.
@@ -1227,7 +1796,106 @@ export interface HeroBlockProps {
    */
   image?: (string | null) | Media;
   /**
-   * Primary and secondary call-to-action buttons.
+   * Add buttons (Links, Modals, Popups, Phone calls, Downloads) with custom background and text colors.
+   */
+  buttons?:
+    | {
+        actionData?: {
+          /**
+           * Choose the action triggered when this button is clicked.
+           */
+          action?: ('link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download') | null;
+          label?: string | null;
+          style?: ('solid' | 'outline' | 'ghost') | null;
+          showArrow?: boolean | null;
+          /**
+           * Override button background color.
+           */
+          buttonBg?:
+            | (
+                | 'default'
+                | 'primary'
+                | 'secondary'
+                | 'dark'
+                | 'light'
+                | 'emerald'
+                | 'rose'
+                | 'amber'
+                | 'purple'
+                | 'blue'
+                | 'outline'
+                | 'transparent'
+                | 'custom'
+              )
+            | null;
+          customButtonBg?: string | null;
+          /**
+           * Override button text / font color.
+           */
+          buttonTextColor?:
+            | (
+                | 'auto'
+                | 'white'
+                | 'dark'
+                | 'primary'
+                | 'secondary'
+                | 'amber'
+                | 'emerald'
+                | 'rose'
+                | 'purple'
+                | 'blue'
+                | 'custom'
+              )
+            | null;
+          customButtonTextColor?: string | null;
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            url?: string | null;
+          };
+          /**
+           * Select the form that appears in the popup modal when clicked.
+           */
+          form?: (string | null) | Form;
+          /**
+           * Rich content displayed inside the modal dialog.
+           */
+          popupContent?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          phone?: string | null;
+          whatsappMessage?: string | null;
+          /**
+           * Upload or choose the file to download.
+           */
+          file?: (string | null) | Media;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Legacy link buttons (fallback).
    */
   links?:
     | {
@@ -1263,7 +1931,7 @@ export interface HeroBlockProps {
  */
 export interface ServicesGridBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1278,15 +1946,61 @@ export interface ServicesGridBlock {
      * Introductory statement about capabilities or offerings.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1296,11 +2010,15 @@ export interface ServicesGridBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1319,6 +2037,12 @@ export interface ServicesGridBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Equal distributes evenly; Custom lets each card specify 1/3, 1/2, 2/3, full.
@@ -1445,7 +2169,7 @@ export interface ServicesGridBlock {
  */
 export interface FAQBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1460,15 +2184,61 @@ export interface FAQBlock {
      * Brief explanation or invitation to contact support.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1478,11 +2248,15 @@ export interface FAQBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1501,6 +2275,12 @@ export interface FAQBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Arrangement of questions and optional side visual.
@@ -1545,7 +2325,7 @@ export interface FAQBlock {
  */
 export interface TestimonialsBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1560,15 +2340,61 @@ export interface TestimonialsBlock {
      * Subtitle highlighting customer satisfaction.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1578,11 +2404,15 @@ export interface TestimonialsBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1601,6 +2431,12 @@ export interface TestimonialsBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Choose between a multi-card grid or a single prominent featured testimonial.
@@ -1623,7 +2459,7 @@ export interface TestimonialsBlock {
  */
 export interface PricingBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1638,15 +2474,61 @@ export interface PricingBlock {
      * Billing details or guarantee note.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1656,11 +2538,15 @@ export interface PricingBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1679,6 +2565,12 @@ export interface PricingBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   plans: {
     highlighted?: boolean | null;
@@ -1725,7 +2617,7 @@ export interface PricingBlock {
  */
 export interface GalleryBlock {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1740,15 +2632,61 @@ export interface GalleryBlock {
      * Description or context for the image collection.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1758,11 +2696,15 @@ export interface GalleryBlock {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1781,6 +2723,12 @@ export interface GalleryBlock {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Number of images displayed per row on desktop screens.
@@ -1801,7 +2749,7 @@ export interface GalleryBlock {
  */
 export interface CTAFormBlockProps {
   /**
-   * Optional heading and description for this section.
+   * Heading, description, text colors, and word highlights for this section.
    */
   sectionHeader?: {
     /**
@@ -1816,15 +2764,61 @@ export interface CTAFormBlockProps {
      * Value proposition or incentive to complete the form.
      */
     description?: string | null;
+    /**
+     * Comma or space-separated words to highlight in the title.
+     */
+    highlightWords?: string | null;
+    highlightColor?:
+      ('primary' | 'secondary' | 'gold' | 'blue' | 'emerald' | 'rose' | 'purple' | 'gradient' | 'custom') | null;
+    customHighlightColor?: string | null;
+    titleColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customTitleColor?: string | null;
+    descriptionColor?:
+      | (
+          | 'default'
+          | 'light'
+          | 'dark'
+          | 'primary'
+          | 'secondary'
+          | 'muted'
+          | 'amber'
+          | 'emerald'
+          | 'rose'
+          | 'purple'
+          | 'blue'
+          | 'custom'
+        )
+      | null;
+    customDescriptionColor?: string | null;
   };
   /**
-   * Controls background color, height, container width, overlays, and animations.
+   * Controls background color, text color, height, container width, overlays, and animations.
    */
   sectionStyle?: {
     /**
      * Theme token background colors.
      */
     background?: ('none' | 'light' | 'dark' | 'primary') | null;
+    /**
+     * Forces specific font color across section.
+     */
+    textColor?: ('default' | 'light' | 'dark' | 'primary' | 'secondary' | 'muted' | 'custom') | null;
+    customTextColor?: string | null;
     /**
      * Top and bottom section padding.
      */
@@ -1834,11 +2828,15 @@ export interface CTAFormBlockProps {
      */
     animation?: ('none' | 'fade-up' | 'fade-in' | 'zoom') | null;
     /**
-     * Viewport height constraints for the section.
+     * Viewport height boundary (min-h).
      */
-    height?: ('fit' | 'screen' | 'tall' | 'medium') | null;
+    height?: ('fit' | 'screen' | 'screen-below-header' | 'tall' | 'medium' | 'compact') | null;
     /**
-     * Applies when height is taller than content.
+     * Optional separate height for phones.
+     */
+    mobileHeight?: ('same-as-desktop' | 'fit' | 'medium' | 'screen' | 'screen-below-header') | null;
+    /**
+     * Placement when height exceeds content.
      */
     contentVerticalAlign?: ('top' | 'center' | 'bottom') | null;
     /**
@@ -1857,6 +2855,12 @@ export interface CTAFormBlockProps {
      * Token-based overlay tint over background image.
      */
     overlay?: ('none' | 'light' | 'dark') | null;
+    /**
+     * Splits this section into a 2-column layout: content on one side, image on the other.
+     */
+    sideImage?: (string | null) | Media;
+    sideImagePosition?: ('right' | 'left') | null;
+    sideImageAspect?: ('4:3' | '16:9' | '1:1' | 'natural') | null;
   };
   /**
    * Select the form (newsletter, quote request, consultation, etc.).
@@ -2155,6 +3159,62 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleSize?: T;
+        descriptionSize?: T;
+        textWidth?: T;
+        textColor?: T;
+        customTextColor?: T;
+        textAlign?: T;
+        buttonsAlign?: T;
+        verticalAlign?: T;
+        height?: T;
+        image?: T;
+        mobileImage?: T;
+        isDecorative?: T;
+        imageMode?: T;
+        imagePosition?: T;
+        imageFit?: T;
+        focalPoint?: T;
+        overlay?: T;
+        overlayStrength?: T;
+        textTone?: T;
+        buttons?:
+          | T
+          | {
+              label?: T;
+              style?: T;
+              size?: T;
+              icon?: T;
+              buttonBg?: T;
+              customButtonBg?: T;
+              buttonTextColor?: T;
+              customButtonTextColor?: T;
+              actionData?:
+                | T
+                | {
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          newTab?: T;
+                          reference?: T;
+                          url?: T;
+                        };
+                    form?: T;
+                    popupContent?: T;
+                    phone?: T;
+                    whatsappMessage?: T;
+                    file?: T;
+                  };
+              id?: T;
+            };
         richText?: T;
         links?:
           | T
@@ -2221,6 +3281,10 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               label?: T;
               style?: T;
               showArrow?: T;
+              buttonBg?: T;
+              customButtonBg?: T;
+              buttonTextColor?: T;
+              customButtonTextColor?: T;
               link?:
                 | T
                 | {
@@ -2266,27 +3330,74 @@ export interface ContentBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   columns?:
     | T
     | {
         title?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
         size?: T;
+        image?: T;
+        imagePosition?: T;
+        imageAspect?: T;
+        imageFit?: T;
         richText?: T;
         enableLink?: T;
+        actionData?:
+          | T
+          | {
+              action?: T;
+              label?: T;
+              style?: T;
+              showArrow?: T;
+              buttonBg?: T;
+              customButtonBg?: T;
+              buttonTextColor?: T;
+              customButtonTextColor?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              form?: T;
+              popupContent?: T;
+              phone?: T;
+              whatsappMessage?: T;
+              file?: T;
+            };
         link?:
           | T
           | {
@@ -2336,19 +3447,32 @@ export interface FormBlockPropsSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   form?: T;
   fieldLayout?: T;
@@ -2377,19 +3501,32 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   imagePosition?: T;
   mobileOrder?: T;
@@ -2430,23 +3567,66 @@ export interface HeroBlockPropsSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   variant?: T;
   textAlign?: T;
   image?: T;
+  buttons?:
+    | T
+    | {
+        actionData?:
+          | T
+          | {
+              action?: T;
+              label?: T;
+              style?: T;
+              showArrow?: T;
+              buttonBg?: T;
+              customButtonBg?: T;
+              buttonTextColor?: T;
+              customButtonTextColor?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              form?: T;
+              popupContent?: T;
+              phone?: T;
+              whatsappMessage?: T;
+              file?: T;
+            };
+        id?: T;
+      };
   links?:
     | T
     | {
@@ -2476,19 +3656,32 @@ export interface ServicesGridBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   layoutMode?: T;
   columns?: T;
@@ -2553,19 +3746,32 @@ export interface FAQBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   layout?: T;
   style?: T;
@@ -2593,19 +3799,32 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   layout?: T;
   items?:
@@ -2631,19 +3850,32 @@ export interface PricingBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   plans?:
     | T
@@ -2686,19 +3918,32 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   columns?: T;
   images?:
@@ -2722,19 +3967,32 @@ export interface CTAFormBlockPropsSelect<T extends boolean = true> {
         title?: T;
         alignment?: T;
         description?: T;
+        highlightWords?: T;
+        highlightColor?: T;
+        customHighlightColor?: T;
+        titleColor?: T;
+        customTitleColor?: T;
+        descriptionColor?: T;
+        customDescriptionColor?: T;
       };
   sectionStyle?:
     | T
     | {
         background?: T;
+        textColor?: T;
+        customTextColor?: T;
         spacing?: T;
         animation?: T;
         height?: T;
+        mobileHeight?: T;
         contentVerticalAlign?: T;
         width?: T;
         accentColor?: T;
         backgroundImage?: T;
         overlay?: T;
+        sideImage?: T;
+        sideImagePosition?: T;
+        sideImageAspect?: T;
       };
   form?: T;
   layout?: T;
@@ -2847,6 +4105,26 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
         xlarge?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        mobile?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        banner?:
           | T
           | {
               url?: T;

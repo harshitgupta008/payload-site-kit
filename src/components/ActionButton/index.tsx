@@ -15,6 +15,38 @@ const FormModal = dynamic(
   { ssr: false },
 )
 
+import { buttonBgClasses, buttonTextClasses } from '@/utilities/colorOptions'
+
+export type ActionButtonBgType =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'dark'
+  | 'light'
+  | 'emerald'
+  | 'rose'
+  | 'amber'
+  | 'purple'
+  | 'blue'
+  | 'outline'
+  | 'transparent'
+  | 'custom'
+  | null
+
+export type ActionButtonTextColorType =
+  | 'auto'
+  | 'white'
+  | 'dark'
+  | 'primary'
+  | 'secondary'
+  | 'amber'
+  | 'emerald'
+  | 'rose'
+  | 'purple'
+  | 'blue'
+  | 'custom'
+  | null
+
 export interface ActionButtonProps {
   actionData?: {
     action?: 'link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download' | null
@@ -24,6 +56,10 @@ export interface ActionButtonProps {
     phone?: string | null
     whatsappMessage?: string | null
     file?: string | Media | null
+    buttonBg?: ActionButtonBgType
+    customButtonBg?: string | null
+    buttonTextColor?: ActionButtonTextColorType
+    customButtonTextColor?: string | null
   } | null
   action?: 'link' | 'popupForm' | 'popupContent' | 'tel' | 'whatsapp' | 'download' | null
   link?: any
@@ -32,6 +68,10 @@ export interface ActionButtonProps {
   phone?: string | null
   whatsappMessage?: string | null
   file?: string | Media | null
+  buttonBg?: ActionButtonBgType
+  customButtonBg?: string | null
+  buttonTextColor?: ActionButtonTextColorType
+  customButtonTextColor?: string | null
 
   label?: string | null
   children?: React.ReactNode
@@ -76,9 +116,30 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
   const sizeChoice = props.size || 'md'
   const iconChoice = props.icon || (props.showArrow ? 'arrow-right' : 'none')
 
+  const buttonBgChoice = props.buttonBg || rawActionData.buttonBg || 'default'
+  const customButtonBg = props.customButtonBg || rawActionData.customButtonBg
+  const buttonTextColorChoice = props.buttonTextColor || rawActionData.buttonTextColor || 'auto'
+  const customButtonTextColor = props.customButtonTextColor || rawActionData.customButtonTextColor
+
+  const bgStyleClass =
+    buttonBgChoice !== 'default' && buttonBgChoice !== 'custom'
+      ? buttonBgClasses[buttonBgChoice] || styleClasses[styleChoice] || styleClasses.solid
+      : styleClasses[styleChoice] || styleClasses.solid
+
+  const textColorClass =
+    buttonTextColorChoice !== 'auto' && buttonTextColorChoice !== 'custom'
+      ? buttonTextClasses[buttonTextColorChoice] || ''
+      : ''
+
+  const customInlineStyle: React.CSSProperties = {
+    ...(buttonBgChoice === 'custom' && customButtonBg ? { backgroundColor: customButtonBg } : {}),
+    ...(buttonTextColorChoice === 'custom' && customButtonTextColor ? { color: customButtonTextColor } : {}),
+  }
+
   const baseStyle = cn(
     'inline-flex items-center justify-center font-semibold rounded-[var(--radius)] transition-all duration-150 gap-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-    styleClasses[styleChoice] || styleClasses.solid,
+    bgStyleClass,
+    textColorClass,
     sizeClasses[sizeChoice] || sizeClasses.md,
     props.className,
   )
@@ -99,7 +160,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
   if (actionType === 'tel' && phone) {
     const cleanPhone = phone.replace(/[^\d+]/g, '')
     return (
-      <a href={`tel:${cleanPhone}`} className={cn(baseStyle, 'group')} onClick={props.onClick}>
+      <a href={`tel:${cleanPhone}`} className={cn(baseStyle, 'group')} style={customInlineStyle} onClick={props.onClick}>
         <Phone className="w-4 h-4 shrink-0" />
         <span>{content}</span>
       </a>
@@ -116,6 +177,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         target="_blank"
         rel="noopener noreferrer"
         className={cn(baseStyle, 'group')}
+        style={customInlineStyle}
         onClick={props.onClick}
       >
         <MessageSquare className="w-4 h-4 shrink-0" />
@@ -134,6 +196,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         target="_blank"
         rel="noopener noreferrer"
         className={cn(baseStyle, 'group')}
+        style={customInlineStyle}
         onClick={props.onClick}
       >
         <Download className="w-4 h-4 shrink-0" />
@@ -153,6 +216,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
             props.onClick?.()
           }}
           className={cn(baseStyle, 'group')}
+          style={customInlineStyle}
           aria-haspopup="dialog"
           aria-expanded={isModalOpen}
         >
@@ -178,7 +242,9 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     return (
       <CMSLink
         {...linkData}
+        appearance="inline"
         className={cn(baseStyle, 'group')}
+        style={customInlineStyle}
         size={sizeChoice === 'lg' ? 'lg' : sizeChoice === 'sm' ? 'sm' : 'default'}
       >
         <span>{content}</span>
@@ -189,7 +255,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
 
   // Fallback button
   return (
-    <button type="button" className={cn(baseStyle, 'group')} onClick={props.onClick}>
+    <button type="button" className={cn(baseStyle, 'group')} style={customInlineStyle} onClick={props.onClick}>
       <span>{content}</span>
       {renderIcon()}
     </button>
