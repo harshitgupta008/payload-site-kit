@@ -85,15 +85,16 @@ Tick each phase when it is finished.
 | 1 | Project setup and MongoDB | [x] |
 | 2 | App Router and catch-all page route | [x] |
 | 3 | Site settings and theme | [x] |
-| 4 | Navigation, links and SEO | [ ] |
-| 5 | Content blocks (Image + Text, FAQ, Cards, Hero, ...) | [ ] |
+| 4 | Navigation, links and SEO | [ X] |
+| 5 | Content blocks (Image + Text, FAQ, Cards, Hero, ...) | [X ] |
 | 5B | Header and footer builder | [ ] |
-| 5C to 5F | Cards, hero, page banner, section height | [ ] |
-| 5G, 5H | Section themes and multiple themes | [ ] |
-| 6 | Blog | [ ] |
-| 7 | Forms and popup | [ ] |
-| 8 | Roles and security | [ ] |
-| 9 | Testing and deployment | [ ] |
+| 5C to 5F | Cards, hero, page banner, section height | [X] |
+| 5G, 5H | Section themes and multiple themes | [X] |
+| 6 | Blog | [X] |
+| 7 | Forms and popup | [X] |
+| 8 | Roles and security | [X] |
+| 9 | Testing and deployment | [X] |
+| 10 | Reference ui, user can selected reference ui | [] |
 
 ---
 
